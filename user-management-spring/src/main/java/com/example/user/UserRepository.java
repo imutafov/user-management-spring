@@ -1,20 +1,21 @@
 package com.example.user;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	public List<User> findByFirstNameLike(String firstName);
+    public User findByUserName(String userName);
 
-	public List<User> findAllByOrderByLastName();
+    public List<User> findByFirstNameLike(String firstName);
 
-	public List<User> findAllByOrderByLastNameDesc();
+    public List<User> findAllByOrderByLastName();
 
-	public List<User> findAllByOrderByBirthDate();
+    public List<User> findAllByOrderByLastNameDesc();
 
-	public List<User> findAllByOrderByBirthDateDesc();
+    public List<User> findAllByOrderByBirthDate();
+
+    public List<User> findAllByOrderByBirthDateDesc();
 }
