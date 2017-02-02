@@ -1,5 +1,6 @@
 package com.example.user;
 
+import com.example.exceptions.UserNotFoundException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,8 +32,12 @@ public class UserController {
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public User remove(@PathVariable Long id) throws Exception {
-        return service.remove(id);
+    public User remove(@PathVariable Long id) {
+        try {
+            return service.remove(id);
+        } catch (Exception e) {
+            throw new UserNotFoundException(id.toString());
+        }
     }
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
