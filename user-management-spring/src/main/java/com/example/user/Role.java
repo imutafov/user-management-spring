@@ -6,8 +6,8 @@
 package com.example.user;
 
 import java.util.Collection;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,7 +30,7 @@ public class Role {
 
     private String name;
 
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
     private Collection<User> users;
 
 }

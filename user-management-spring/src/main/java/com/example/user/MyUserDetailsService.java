@@ -6,6 +6,7 @@
 package com.example.user;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -44,6 +45,18 @@ public class MyUserDetailsService implements UserDetailsService {
             authorities.add(grantedAuthority);
         }
         return authorities;
+    }
+
+    List<User> getAllFlaggedUsers() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    List<User> getAllUnflaggedUsers() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    User changeFlag(Long id, User user) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
