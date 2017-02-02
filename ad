@@ -1,0 +1,109 @@
+[1mdiff --git a/user-management-spring/src/main/java/com/example/user/MyUserDetailsService.java b/user-management-spring/src/main/java/com/example/user/MyUserDetailsService.java[m
+[1mindex bd1afcc..e012da0 100644[m
+[1m--- a/user-management-spring/src/main/java/com/example/user/MyUserDetailsService.java[m
+[1m+++ b/user-management-spring/src/main/java/com/example/user/MyUserDetailsService.java[m
+[36m@@ -6,6 +6,7 @@[m
+ package com.example.user;[m
+ [m
+ import java.util.HashSet;[m
+[32m+[m[32mimport java.util.List;[m
+ import java.util.Set;[m
+ import org.springframework.beans.factory.annotation.Autowired;[m
+ import org.springframework.security.core.GrantedAuthority;[m
+[36m@@ -46,4 +47,16 @@[m [mpublic class MyUserDetailsService implements UserDetailsService {[m
+         return authorities;[m
+     }[m
+ [m
+[32m+[m[32m    List<User> getAllFlaggedUsers() {[m
+[32m+[m[32m        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    List<User> getAllUnflaggedUsers() {[m
+[32m+[m[32m        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    User changeFlag(Long id, User user) {[m
+[32m+[m[32m        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.[m
+[32m+[m[32m    }[m
+[32m+[m
+ }[m
+[1mdiff --git a/user-management-spring/src/main/java/com/example/user/Role.java b/user-management-spring/src/main/java/com/example/user/Role.java[m
+[1mindex 23bd6ba..f519b63 100644[m
+[1m--- a/user-management-spring/src/main/java/com/example/user/Role.java[m
+[1m+++ b/user-management-spring/src/main/java/com/example/user/Role.java[m
+[36m@@ -6,8 +6,8 @@[m
+ package com.example.user;[m
+ [m
+ import java.util.Collection;[m
+[32m+[m[32mimport javax.persistence.CascadeType;[m
+ import javax.persistence.Entity;[m
+[31m-import javax.persistence.FetchType;[m
+ import javax.persistence.GeneratedValue;[m
+ import javax.persistence.GenerationType;[m
+ import javax.persistence.Id;[m
+[36m@@ -30,7 +30,7 @@[m [mpublic class Role {[m
+ [m
+     private String name;[m
+ [m
+[31m-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)[m
+[32m+[m[32m    @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)[m
+     private Collection<User> users;[m
+ [m
+ }[m
+[1mdiff --git a/user-management-spring/src/main/java/com/example/user/User.java b/user-management-spring/src/main/java/com/example/user/User.java[m
+[1mindex 4f94433..9c2fbe8 100644[m
+[1m--- a/user-management-spring/src/main/java/com/example/user/User.java[m
+[1m+++ b/user-management-spring/src/main/java/com/example/user/User.java[m
+[36m@@ -2,6 +2,7 @@[m [mpackage com.example.user;[m
+ [m
+ import java.util.Collection;[m
+ import java.util.Date;[m
+[32m+[m[32mimport javax.persistence.CascadeType;[m
+ import javax.persistence.Entity;[m
+ import javax.persistence.GeneratedValue;[m
+ import javax.persistence.GenerationType;[m
+[36m@@ -30,7 +31,7 @@[m [mpublic class User {[m
+     private String phoneNumber;[m
+     private String email;[m
+ [m
+[31m-    @ManyToMany[m
+[32m+[m[32m    @ManyToMany(cascade = CascadeType.ALL)[m
+     @JoinTable([m
+             name = "users_roles",[m
+             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId"),[m
+[1mdiff --git a/user-management-spring/src/main/java/com/example/user/UserController.java b/user-management-spring/src/main/java/com/example/user/UserController.java[m
+[1mindex 469cf33..1c01d4a 100644[m
+[1m--- a/user-management-spring/src/main/java/com/example/user/UserController.java[m
+[1m+++ b/user-management-spring/src/main/java/com/example/user/UserController.java[m
+[36m@@ -18,6 +18,8 @@[m [mpublic class UserController {[m
+     @Autowired[m
+     private UserService service;[m
+ [m
+[32m+[m[32m//    @Autowired[m
+[32m+[m[32m//    private MyUserDetailsService customService;[m
+     @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)[m
+     @ResponseStatus(value = HttpStatus.OK)[m
+     public User save(@RequestBody User user) {[m
+[36m@@ -75,4 +77,22 @@[m [mpublic class UserController {[m
+     public List<User> getAllOrderByDateDesc() {[m
+         return service.getAllOrderByDateDesc();[m
+     }[m
+[32m+[m[32m//[m
+[32m+[m[32m//    @RequestMapping(value = "/users/flagged", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)[m
+[32m+[m[32m//    @ResponseStatus(value = HttpStatus.OK)[m
+[32m+[m[32m//    public List<User> getAllFlaggedUsers() {[m
+[32m+[m[32m//        return customService.getAllFlaggedUsers();[m
+[32m+[m[32m//    }[m
+[32m+[m[32m//[m
+[32m+[m[32m//    @RequestMapping(value = "/users/unflagged", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)[m
+[32m+[m[32m//    @ResponseStatus(value = HttpStatus.OK)[m
+[32m+[m[32m//    public List<User> getAllUnflaggedUsers() {[m
+[32m+[m[32m//        return customService.getAllUnflaggedUsers();[m
+[32m+[m[32m//    }[m
+[32m+[m[32m//[m
+[32m+[m[32m//    @RequestMapping(value = "/user/change/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)[m
+[32m+[m[32m//    @ResponseStatus(value = HttpStatus.OK)[m
+[32m+[m[32m//    public User changeUserFlag(@PathVariable Long id, @RequestBody User user) {[m
+[32m+[m[32m//        return customService.changeFlag(id, user);[m
+[32m+[m[32m//}[m
+ }[m
