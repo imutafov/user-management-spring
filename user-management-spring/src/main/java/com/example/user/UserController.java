@@ -18,6 +18,8 @@ public class UserController {
     @Autowired
     private UserService service;
 
+//    @Autowired
+//    private MyUserDetailsService customService;
     @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public User save(@RequestBody User user) {
@@ -75,4 +77,22 @@ public class UserController {
     public List<User> getAllOrderByDateDesc() {
         return service.getAllOrderByDateDesc();
     }
+//
+//    @RequestMapping(value = "/users/flagged", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseStatus(value = HttpStatus.OK)
+//    public List<User> getAllFlaggedUsers() {
+//        return customService.getAllFlaggedUsers();
+//    }
+//
+//    @RequestMapping(value = "/users/unflagged", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseStatus(value = HttpStatus.OK)
+//    public List<User> getAllUnflaggedUsers() {
+//        return customService.getAllUnflaggedUsers();
+//    }
+//
+//    @RequestMapping(value = "/user/change/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseStatus(value = HttpStatus.OK)
+//    public User changeUserFlag(@PathVariable Long id, @RequestBody User user) {
+//        return customService.changeFlag(id, user);
+//}
 }
