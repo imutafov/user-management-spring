@@ -18,4 +18,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     public List<User> findAllByOrderByBirthDate();
 
     public List<User> findAllByOrderByBirthDateDesc();
+
+    public List<User> findByEnabledTrue();
+
+    public List<User> findByEnabledFalse();
 }

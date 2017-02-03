@@ -1,6 +1,7 @@
 package com.example.user;
 
 import com.example.exceptions.UserNotFoundException;
+import com.example.security.CustomUserDetailsService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,8 +19,9 @@ public class UserController {
     @Autowired
     private UserService service;
 
-//    @Autowired
-//    private MyUserDetailsService customService;
+    @Autowired
+    private CustomUserDetailsService customService;
+
     @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public User save(@RequestBody User user) {
@@ -77,22 +79,22 @@ public class UserController {
     public List<User> getAllOrderByDateDesc() {
         return service.getAllOrderByDateDesc();
     }
-//
-//    @RequestMapping(value = "/users/flagged", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseStatus(value = HttpStatus.OK)
-//    public List<User> getAllFlaggedUsers() {
-//        return customService.getAllFlaggedUsers();
-//    }
-//
-//    @RequestMapping(value = "/users/unflagged", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseStatus(value = HttpStatus.OK)
-//    public List<User> getAllUnflaggedUsers() {
-//        return customService.getAllUnflaggedUsers();
-//    }
-//
-//    @RequestMapping(value = "/user/change/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseStatus(value = HttpStatus.OK)
-//    public User changeUserFlag(@PathVariable Long id, @RequestBody User user) {
-//        return customService.changeFlag(id, user);
-//}
+
+    @RequestMapping(value = "/users/flagged", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<User> getAllFlaggedUsers() {
+        return customService.getAllFlaggedUsers();
+    }
+
+    @RequestMapping(value = "/users/unflagged", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<User> getAllUnflaggedUsers() {
+        return customService.getAllUnflaggedUsers();
+    }
+
+    @RequestMapping(value = "/user/change/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
+    public User changeUserFlag(@PathVariable String name) {
+        return customService.changeFlag(name);
+    }
 }
