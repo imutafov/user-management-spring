@@ -41,6 +41,7 @@ public class User implements Serializable, UserDetails {
     private String phoneNumber;
     private String email;
 
+    @Column(name = "ENABLED")
     private boolean enabled;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -34,16 +34,19 @@ public class CustomUserDetailsService implements UserDetailsService {
         return user;
     }
 
-    List<User> getAllFlaggedUsers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<User> getAllFlaggedUsers() {
+        return userRepository.findByEnabledTrue();
     }
 
-    List<User> getAllUnflaggedUsers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<User> getAllUnflaggedUsers() {
+        return userRepository.findByEnabledFalse();
     }
 
-    User changeFlag(Long id, User user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public User changeFlag(String name) {
+        User user = userRepository.findByUserName(name);
+        user.setEnabled(!user.isEnabled());
+        userRepository.save(user);
+        return user;
     }
 
 //    private Set<GrantedAuthority> getAuthorities(User user) {
