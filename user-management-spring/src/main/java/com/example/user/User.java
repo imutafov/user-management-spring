@@ -41,6 +41,8 @@ public class User implements Serializable, UserDetails {
     private String phoneNumber;
     private String email;
 
+    private boolean enabled;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",
@@ -75,6 +77,10 @@ public class User implements Serializable, UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }
