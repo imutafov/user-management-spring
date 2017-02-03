@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.user;
+package com.example.security;
 
-import java.util.HashSet;
+import com.example.user.User;
+import com.example.user.UserRepository;
 import java.util.List;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,35 +16,22 @@ import org.springframework.stereotype.Service;
 
 /**
  *
- * @author msol-pc
+ * @author I.Mutafov
  */
 @Service
-public class MyUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        try {
-            User user = userRepository.findByUserName(username);
-            if (user == null) {
-                System.out.println("No user found with this username");
-                return null;
-            }
-            return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), getAuthorities(user));
-        } catch (Exception e) {
-            throw new UsernameNotFoundException("User not found");
+        User user = userRepository.findByUserName(username);
+        System.out.println(user.getFirstName() + " " + user.getUsername());
+        if (user == null) {
+            throw new UsernameNotFoundException("Could not find user with username: " + username);
         }
-    }
-
-    private Set<GrantedAuthority> getAuthorities(User user) {
-        Set<GrantedAuthority> authorities = new HashSet();
-        for (Role role : user.getRoles()) {
-            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getName());
-            authorities.add(grantedAuthority);
-        }
-        return authorities;
+        return user;
     }
 
     List<User> getAllFlaggedUsers() {
@@ -61,4 +46,12 @@ public class MyUserDetailsService implements UserDetailsService {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+//    private Set<GrantedAuthority> getAuthorities(User user) {
+//        Set<GrantedAuthority> authorities = new HashSet();
+//        for (Role role : user.getRoles()) {
+//            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getName());
+//            authorities.add(grantedAuthority);
+//        }
+//        return authorities;
+//    }
 }

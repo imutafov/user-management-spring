@@ -1,0 +1,1 @@
+INSERT INTO T_USER (USER_ID, USERNAME, PASSWORD, FIRSTNAME) VALUES ('1', 'test', 'test', 'test');
