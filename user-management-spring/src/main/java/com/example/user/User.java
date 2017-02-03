@@ -1,9 +1,10 @@
 package com.example.user;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import javax.persistence.CascadeType;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,11 +13,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity(name = "T_USER")
@@ -44,16 +44,23 @@ public class User implements Serializable, UserDetails {
     @Column(name = "ENABLED")
     private boolean enabled;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "USER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Collection<Role> roles;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = "USER_ROLE", joinColumns = {
+        @JoinColumn(name = "USER_ID", nullable = false, updatable = false)},
+            inverseJoinColumns = {
+                @JoinColumn(name = "ROLE_ID",
+                        nullable = false, updatable = true)})
+    private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return AuthorityUtils.createAuthorityList("ROLE_USER");
+        List<GrantedAuthority> authList = new ArrayList<>();
+        authList.addAll((Collection<? extends GrantedAuthority>) role.getPrivileges());
+        return authList;
+    }
+
+    public Collection<Privilege> getPrivileges() {
+        return role.getPrivileges();
     }
 
     @Override
