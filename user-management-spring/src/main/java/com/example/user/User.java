@@ -1,5 +1,6 @@
 package com.example.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,6 +54,7 @@ public class User implements Serializable, UserDetails {
     private Role role;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authList = new ArrayList<>();
         authList.addAll((Collection<? extends GrantedAuthority>) role.getPrivileges());
