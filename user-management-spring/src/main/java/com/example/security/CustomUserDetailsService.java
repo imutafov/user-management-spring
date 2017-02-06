@@ -7,7 +7,6 @@ package com.example.security;
 
 import com.example.user.User;
 import com.example.user.UserRepository;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,21 +30,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Could not find user with username: " + username);
         }
-        return user;
-    }
-
-    public List<User> getAllFlaggedUsers() {
-        return userRepository.findByEnabledTrue();
-    }
-
-    public List<User> getAllUnflaggedUsers() {
-        return userRepository.findByEnabledFalse();
-    }
-
-    public User changeFlag(String name) {
-        User user = userRepository.findByUserName(name);
-        user.setEnabled(!user.isEnabled());
-        userRepository.save(user);
         return user;
     }
 

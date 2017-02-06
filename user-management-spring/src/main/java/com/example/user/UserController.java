@@ -1,12 +1,21 @@
 package com.example.user;
 
 import com.example.exceptions.UserNotFoundException;
-import com.example.security.CustomUserDetailsService;
+import com.example.security.UserAuthenticationRequest;
+import com.example.security.UserAuthenticationResponse;
+import com.example.security.UserTokenUtil;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,11 +26,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
 
+    private String tokenHeader = "authorize";
+
     @Autowired
     private UserService service;
 
     @Autowired
-    private CustomUserDetailsService customService;
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserTokenUtil userTokenUtil;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @PreAuthorize("hasAuthority('PERM_EDIT_USER')")
     @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -94,20 +111,44 @@ public class UserController {
     @RequestMapping(value = "/users/flagged", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public List<User> getAllFlaggedUsers() {
-        return customService.getAllFlaggedUsers();
+        return service.getAllFlaggedUsers();
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = "/users/unflagged", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public List<User> getAllUnflaggedUsers() {
-        return customService.getAllUnflaggedUsers();
+        return service.getAllUnflaggedUsers();
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = "/user/change/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public User changeUserFlag(@PathVariable String name) {
-        return customService.changeFlag(name);
+        return service.changeFlag(name);
+    }
+
+    @RequestMapping(value = "/auth", method = RequestMethod.POST)
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody UserAuthenticationRequest authenticationRequest) {
+
+        final Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        authenticationRequest.getUsername(),
+                        authenticationRequest.getPassword()
+                )
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final String token = userTokenUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(new UserAuthenticationResponse(token));
+    }
+
+    @RequestMapping(value = "user/auth/{token}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public User getAuthenticatedUser(@PathVariable String token) {
+        String username = userTokenUtil.getUsernameFromToken(token);
+        User user = (User) userDetailsService.loadUserByUsername(username);
+        return user;
     }
 }

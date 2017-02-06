@@ -11,6 +11,7 @@ public class UserService {
     private UserRepository repo;
 
     public User save(User user) {
+        user.setEnabled(false);
         return repo.save(user);
     }
 
@@ -58,5 +59,20 @@ public class UserService {
 
     public List<User> getAllOrderByDateDesc() {
         return repo.findAllByOrderByLastNameDesc();
+    }
+
+    public List<User> getAllFlaggedUsers() {
+        return repo.findByEnabledTrue();
+    }
+
+    public List<User> getAllUnflaggedUsers() {
+        return repo.findByEnabledFalse();
+    }
+
+    public User changeFlag(String name) {
+        User user = repo.findByUserName(name);
+        user.setEnabled(!user.isEnabled());
+        repo.save(user);
+        return user;
     }
 }

@@ -5,6 +5,7 @@
  */
 package com.example.user;
 
+import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +26,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Role {
+public class Role implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,6 +34,13 @@ public class Role {
     private Long id;
 
     private String name;
+
+    public Role() {
+    }
+
+    public Role(String role) {
+        this.name = role;
+    }
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
