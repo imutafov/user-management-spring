@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -45,12 +46,11 @@ public class User implements Serializable, UserDetails {
     @Column(name = "ENABLED")
     private boolean enabled;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_ROLE", joinColumns = {
-        @JoinColumn(name = "USER_ID", nullable = false, updatable = false)},
+        @JoinColumn(name = "USER_ID")},
             inverseJoinColumns = {
-                @JoinColumn(name = "ROLE_ID",
-                        nullable = false, updatable = true)})
+                @JoinColumn(name = "ROLE_ID")})
     private Role role;
 
     @Override

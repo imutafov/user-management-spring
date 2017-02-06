@@ -2,6 +2,8 @@ package com.example.user;
 
 import com.example.exceptions.UserNotFoundException;
 import com.example.security.CustomUserDetailsService;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,10 +25,24 @@ public class UserController {
     @Autowired
     private CustomUserDetailsService customService;
 
-    @PreAuthorize("hasAuthority('PERM_EDIT_USER')")
+    //@PreAuthorize("permitAll")
+    //@PostAuthorize("permitAll")
     @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public User save(@RequestBody User user) {
+
+        Role role = new Role();
+        user.setRole(role);
+
+        Privilege privilege = new Privilege();
+        privilege.setName("PERM_VIEW_USER");
+
+        Collection<Privilege> privileges = new ArrayList<>();
+        privileges.add(privilege);
+
+        role.setPrivileges(privileges);
+        user.setRole(role);
+
         return service.save(user);
     }
 

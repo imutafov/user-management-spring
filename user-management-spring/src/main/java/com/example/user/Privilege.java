@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -19,6 +20,7 @@ import org.springframework.security.core.GrantedAuthority;
  * @author msol-pc
  */
 @Entity(name = "PRIVILEGE")
+@Setter
 public class Privilege implements GrantedAuthority {
 
     @Id
