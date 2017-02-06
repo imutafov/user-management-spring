@@ -5,8 +5,10 @@
  */
 package com.example.configuration;
 
+import com.example.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,10 +19,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * @author msol-pc
  */
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    UserDetailsService service;
+    CustomUserDetailsService service;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -29,7 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
 
         http
-                .userDetailsService(userDetailsService())
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
@@ -49,6 +51,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected UserDetailsService userDetailsService() {
         return service;
-
     }
 }
