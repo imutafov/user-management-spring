@@ -1,0 +1,10 @@
+# Mail
+## SendMailSSL
+It works but the are some additional settings for the mail account.
+Set `Allow less secure apps: ON` from `My Account > Sign In & Security`
+TODO: There must be a better way than to lower the security.
+
+## SendMailTLS
+Works but not sure why. May be after the `Allow less secure apps: ON`
+it start to work;
+
