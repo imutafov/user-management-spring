@@ -1,20 +1,16 @@
 package com.example.user;
 
 import com.example.exceptions.UserNotFoundException;
-import com.example.security.UserAuthenticationRequest;
 import com.example.security.UserAuthenticationResponse;
 import com.example.security.UserTokenUtil;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,13 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
 
-    private String tokenHeader = "authorize";
+    private String tokenHeader = "Authorization";
 
     @Autowired
     private UserService service;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @Autowired
     private UserTokenUtil userTokenUtil;
@@ -45,6 +38,19 @@ public class UserController {
     @ResponseStatus(value = HttpStatus.OK)
     public User save(@RequestBody User user) {
         return service.save(user);
+    }
+
+    @RequestMapping(value = "/user/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity create(@RequestBody User user) throws UnsupportedEncodingException {
+        service.save(user);
+        if (user != null) {
+            String token = userTokenUtil.generateToken(user);
+            if (userTokenUtil.validateToken(token, user)) {
+                return ResponseEntity.ok(new UserAuthenticationResponse(token));
+            }
+        }
+        return null;
     }
 
     @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
@@ -128,27 +134,29 @@ public class UserController {
         return service.changeFlag(name);
     }
 
-    @RequestMapping(value = "/auth", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody UserAuthenticationRequest authenticationRequest) {
-
-        final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authenticationRequest.getUsername(),
-                        authenticationRequest.getPassword()
-                )
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String token = userTokenUtil.generateToken(userDetails);
-
-        return ResponseEntity.ok(new UserAuthenticationResponse(token));
-    }
-
-    @RequestMapping(value = "user/auth/{token}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public User getAuthenticatedUser(@PathVariable String token) {
+    @RequestMapping(value = "user/auth", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public User enableUser(HttpServletRequest request) {
+        String token = request.getHeader(tokenHeader);
         String username = userTokenUtil.getUsernameFromToken(token);
         User user = (User) userDetailsService.loadUserByUsername(username);
+        if (user != null) {
+            user.setEnabled(true);
+        }
         return user;
     }
+
+//       public ResponseEntity<?> createToken(User user) throws UnsupportedEncodingException {
+//
+//        final Authentication authentication = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        authenticationRequest.getUsername(),
+//                        authenticationRequest.getPassword()
+//                )
+//        );
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//               final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+//        final String token = userTokenUtil.generateToken(user);
+//
+//        return ResponseEntity.ok(new UserAuthenticationResponse(token));
+//    }
 }

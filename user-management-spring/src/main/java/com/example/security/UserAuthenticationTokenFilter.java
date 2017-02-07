@@ -30,7 +30,7 @@ public class UserAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserTokenUtil userTokenUtil;
 
-    private String tokenHeader = "authorize";
+    private String tokenHeader = "Authorization";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

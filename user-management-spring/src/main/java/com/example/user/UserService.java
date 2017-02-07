@@ -10,8 +10,12 @@ public class UserService {
     @Autowired
     private UserRepository repo;
 
+    @Autowired
+    private RoleRepository roleRepo;
+
     public User save(User user) {
         user.setEnabled(false);
+        user.setRole(roleRepo.findByName("USER"));
         return repo.save(user);
     }
 
@@ -33,6 +37,7 @@ public class UserService {
         if (user == null) {
             throw new Exception("User not found");
         }
+        dbUser.setUserName(user.getUsername());
         dbUser.setFirstName(user.getFirstName());
         dbUser.setLastName(user.getLastName());
         dbUser.setBirthDate(user.getBirthDate());

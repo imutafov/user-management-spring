@@ -10,6 +10,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,22 +24,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserTokenUtil implements Serializable {
 
-    private String secret = "sekret";
+    private String secret = "secret";
 
     private Long expiration = 604800L;
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails) throws UnsupportedEncodingException {
         Map<String, Object> claims = new HashMap<>();
         claims.put("sub", userDetails.getUsername());
         claims.put("iat", new Date());
         return generateToken(claims);
     }
 
-    String generateToken(Map<String, Object> claims) {
+    String generateToken(Map<String, Object> claims) throws UnsupportedEncodingException {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(SignatureAlgorithm.HS256, secret.getBytes("UTF-8"))
                 .compact();
     }
 
@@ -57,7 +58,7 @@ public class UserTokenUtil implements Serializable {
         Claims claims;
         try {
             claims = Jwts.parser()
-                    .setSigningKey(secret)
+                    .setSigningKey(secret.getBytes("UTF-8"))
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
@@ -70,7 +71,7 @@ public class UserTokenUtil implements Serializable {
         Date created;
         try {
             final Claims claims = getClaimsFromToken(token);
-            created = new Date((Long) claims.get("created"));
+            created = new Date((Long) claims.get("iat"));
         } catch (Exception e) {
             created = null;
         }
@@ -105,4 +106,9 @@ public class UserTokenUtil implements Serializable {
                 && !isTokenExpired(token));
     }
 
+    public Boolean validateToken(String token, User user) {
+        final String username = getUsernameFromToken(token);
+        return (username.equals(user.getUsername())
+                && !isTokenExpired(token));
+    }
 }
