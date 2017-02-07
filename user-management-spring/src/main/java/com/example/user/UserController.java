@@ -146,6 +146,16 @@ public class UserController {
         return user;
     }
 
+    @RequestMapping(value = "user/auth/{token}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public User enableUser(@PathVariable String token) {
+        String username = userTokenUtil.getUsernameFromToken(token);
+        User user = (User) userDetailsService.loadUserByUsername(username);
+        if (user != null) {
+            user.setEnabled(true);
+        }
+        return user;
+    }
+
 //       public ResponseEntity<?> createToken(User user) throws UnsupportedEncodingException {
 //
 //        final Authentication authentication = authenticationManager.authenticate(
