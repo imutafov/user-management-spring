@@ -35,7 +35,7 @@ public class Role implements Serializable {
     private Long id;
 
     private String name;
-  
+
     public Role() {
     }
 
@@ -43,7 +43,7 @@ public class Role implements Serializable {
         this.name = role;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "role_privilege",
             joinColumns = @JoinColumn(

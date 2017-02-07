@@ -1,9 +1,6 @@
 package com.example.user;
 
 import com.example.exceptions.UserNotFoundException;
-import com.example.security.CustomUserDetailsService;
-import java.util.ArrayList;
-import java.util.Collection;
 import com.example.security.UserAuthenticationResponse;
 import com.example.security.UserTokenUtil;
 import java.io.UnsupportedEncodingException;
@@ -35,7 +32,8 @@ public class UserController {
 
     @Autowired
     private UserDetailsService userDetailsService;
- 
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public User save(@RequestBody User user) {
@@ -45,14 +43,15 @@ public class UserController {
     @RequestMapping(value = "/user/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity create(@RequestBody User user) throws UnsupportedEncodingException {
-        service.save(user);
-        if (user != null) {
-            String token = userTokenUtil.generateToken(user);
-            if (userTokenUtil.validateToken(token, user)) {
-                return ResponseEntity.ok(new UserAuthenticationResponse(token));
-            }
+
+        String token = userTokenUtil.generateToken(user);
+
+        service.save(user, token);
+
+        if (!userTokenUtil.validateToken(token, user)) {
+            throw new UserNotFoundException("Could not validate token for this user!");
         }
-        return null;
+        return ResponseEntity.ok(new UserAuthenticationResponse(token));
     }
 
     @PreAuthorize("hasAuthority('PERM_VIEW_USER')")

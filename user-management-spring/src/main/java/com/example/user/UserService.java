@@ -15,11 +15,17 @@ public class UserService {
     private RoleRepository roleRepo;
 
     public User save(User user) {
+        return repo.save(user);
+    }
+
+    public User save(User user, String token) {
+        if (!user.getEmail().isEmpty()) {
+            SendMailTLS.send(user.getEmail(), token);
+        }
+
         user.setEnabled(false);
         user.setRole(roleRepo.findByName("USER"));
-        if (user != null && !user.getEmail().isEmpty()) {
-            SendMailTLS.send(user.getEmail());
-        }
+
         return repo.save(user);
     }
 

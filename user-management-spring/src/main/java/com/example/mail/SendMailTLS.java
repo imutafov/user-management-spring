@@ -21,7 +21,7 @@ public final class SendMailTLS {
     private SendMailTLS() {
     }
 
-    public static void send(String recipient) {
+    public static void send(String recipient, String token) {
 
         final String username = "banskaliqtabgtest@gmail.com";
         final String password = "Test!234";
@@ -46,8 +46,7 @@ public final class SendMailTLS {
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(recipient));
             message.setSubject("Testing Subject");
-            message.setText("Dear Mail Crawler,"
-                    + "\n\n No spam to my email, please!");
+            message.setText(token);
 
             Transport.send(message);
 
