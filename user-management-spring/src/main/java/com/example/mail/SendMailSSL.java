@@ -15,9 +15,12 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class SendMailSSL {
+public final class SendMailSSL {
 
-    public void send() {
+    private SendMailSSL() {
+    }
+
+    public static void send(String recipient) {
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.socketFactory.port", "465");
@@ -38,7 +41,7 @@ public class SendMailSSL {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("banskaliqtabgtest@gmail.com"));
             message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse("banskaliqtabg@gmail.com"));
+                    InternetAddress.parse(recipient));
             message.setSubject("Testing Subject");
             message.setText("Dear Mail Crawler,"
                     + "\n\n No spam to my email, please!");

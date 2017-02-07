@@ -16,9 +16,12 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class SendMailTLS {
+public final class SendMailTLS {
 
-    public void send() {
+    private SendMailTLS() {
+    }
+
+    public static void send(String recipient) {
 
         final String username = "banskaliqtabgtest@gmail.com";
         final String password = "Test!234";
@@ -41,7 +44,7 @@ public class SendMailTLS {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("banskaliqtabgtest@gmail.com"));
             message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse("banskaliqtabg@gmail.com"));
+                    InternetAddress.parse(recipient));
             message.setSubject("Testing Subject");
             message.setText("Dear Mail Crawler,"
                     + "\n\n No spam to my email, please!");
