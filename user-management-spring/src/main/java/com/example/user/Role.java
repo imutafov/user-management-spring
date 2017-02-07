@@ -5,6 +5,7 @@
  */
 package com.example.user;
 
+import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,7 +27,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Role {
+public class Role implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,8 +35,15 @@ public class Role {
     private Long id;
 
     private String name;
+  
+    public Role() {
+    }
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    public Role(String role) {
+        this.name = role;
+    }
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL
     @JoinTable(
             name = "role_privilege",
             joinColumns = @JoinColumn(

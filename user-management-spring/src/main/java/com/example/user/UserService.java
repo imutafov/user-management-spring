@@ -11,11 +11,15 @@ public class UserService {
     @Autowired
     private UserRepository repo;
 
+    @Autowired
+    private RoleRepository roleRepo;
+
     public User save(User user) {
+        user.setEnabled(false);
+        user.setRole(roleRepo.findByName("USER"));
         if (user != null && !user.getEmail().isEmpty()) {
             SendMailTLS.send(user.getEmail());
         }
-
         return repo.save(user);
     }
 
@@ -37,6 +41,7 @@ public class UserService {
         if (user == null) {
             throw new Exception("User not found");
         }
+        dbUser.setUserName(user.getUsername());
         dbUser.setFirstName(user.getFirstName());
         dbUser.setLastName(user.getLastName());
         dbUser.setBirthDate(user.getBirthDate());
@@ -63,5 +68,20 @@ public class UserService {
 
     public List<User> getAllOrderByDateDesc() {
         return repo.findAllByOrderByLastNameDesc();
+    }
+
+    public List<User> getAllFlaggedUsers() {
+        return repo.findByEnabledTrue();
+    }
+
+    public List<User> getAllUnflaggedUsers() {
+        return repo.findByEnabledFalse();
+    }
+
+    public User changeFlag(String name) {
+        User user = repo.findByUserName(name);
+        user.setEnabled(!user.isEnabled());
+        repo.save(user);
+        return user;
     }
 }
