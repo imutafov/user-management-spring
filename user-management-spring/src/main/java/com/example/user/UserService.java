@@ -1,5 +1,6 @@
 package com.example.user;
 
+import com.example.mail.SendMailTLS;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ public class UserService {
     public User save(User user) {
         user.setEnabled(false);
         user.setRole(roleRepo.findByName("USER"));
+        if (user != null && !user.getEmail().isEmpty()) {
+            SendMailTLS.send(user.getEmail());
+        }
         return repo.save(user);
     }
 
