@@ -123,6 +123,7 @@ public class UserController {
     @RequestMapping(value = "user/auth/{token}/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserDTO enableUser(@PathVariable String token) {
         String username = userTokenUtil.getUsernameFromToken(token);
+        System.out.println("USERNAME FROM TOKEN " + username);
         User user = (User) userDetailsService.loadUserByUsername(username);
         if (user != null) {
             user.setEnabled(true);
