@@ -1,10 +1,8 @@
 package com.example.user;
 
-import com.example.access.Views;
 import com.example.exceptions.UserNotFoundException;
 import com.example.security.UserAuthenticationResponse;
 import com.example.security.UserTokenUtil;
-import com.fasterxml.jackson.annotation.JsonView;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -43,13 +41,12 @@ public class UserController {
         return service.save(user);
     }
 
-    @JsonView(Views.Public.class)
     @RequestMapping(value = "/user/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity create(@RequestBody User user) throws UnsupportedEncodingException {
 
         String token = userTokenUtil.generateToken(user);
-
+        System.out.println(user.getFirstName());
         service.save(user, token);
 
         if (!userTokenUtil.validateToken(token, user)) {
@@ -59,10 +56,9 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
-    @JsonView(Views.Public.class)
     @RequestMapping(value = "/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public List<User> getAllUsers(Pageable pageRequest) {
+    public List<UserDTO> getAllUsers(Pageable pageRequest) {
         return service.getAllUsers(pageRequest).getContent();
     }
 
@@ -85,10 +81,9 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
-    @JsonView(Views.Public.class)
     @RequestMapping(value = "/users/search/{firstName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public List<User> search(@PathVariable String firstName, Pageable pageRequest) throws Exception {
+    public List<UserDTO> search(@PathVariable String firstName, Pageable pageRequest) throws Exception {
         return service.findByFirstName(firstName, pageRequest).getContent();
     }
 
@@ -113,26 +108,26 @@ public class UserController {
         return service.changeFlag(name);
     }
 
-    @JsonView(Views.Public.class)
     @RequestMapping(value = "user/auth", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public User enableUser(HttpServletRequest request) {
+    public UserDTO enableUser(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
         String username = userTokenUtil.getUsernameFromToken(token);
         User user = (User) userDetailsService.loadUserByUsername(username);
         if (user != null) {
             user.setEnabled(true);
         }
-        return user;
+        UserDTO dto = UserMapper.mapEntityIntoDTO(user);
+        return dto;
     }
 
-    @JsonView(Views.Public.class)
-    @RequestMapping(value = "user/auth/{token}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public User enableUser(@PathVariable String token) {
+    @RequestMapping(value = "user/auth/{token}/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public UserDTO enableUser(@PathVariable String token) {
         String username = userTokenUtil.getUsernameFromToken(token);
         User user = (User) userDetailsService.loadUserByUsername(username);
         if (user != null) {
             user.setEnabled(true);
         }
-        return user;
+        UserDTO dto = UserMapper.mapEntityIntoDTO(user);
+        return dto;
     }
 }

@@ -30,8 +30,10 @@ public class UserService {
         return repo.save(user);
     }
 
-    public Page<User> getAllUsers(Pageable pageRequest) {
-        return repo.findAll(pageRequest);
+    public Page<UserDTO> getAllUsers(Pageable pageRequest) {
+
+        Page<User> resultPage = repo.findAll(pageRequest);
+        return UserMapper.mapEntityPageIntoDTOPage(pageRequest, resultPage);
     }
 
     public User remove(Long id) throws Exception {
@@ -57,8 +59,9 @@ public class UserService {
         return repo.save(dbUser);
     }
 
-    public Page<User> findByFirstName(String firstName, Pageable pageRequest) {
-        return repo.findByFirstNameLike(firstName, pageRequest);
+    public Page<UserDTO> findByFirstName(String firstName, Pageable pageRequest) {
+        Page<User> resultPage = repo.findByFirstNameLike(firstName, pageRequest);
+        return UserMapper.mapEntityPageIntoDTOPage(pageRequest, resultPage);
     }
 
     public Page<User> getAllFlaggedUsers(Pageable pageRequest) {
