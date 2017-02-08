@@ -11,6 +11,6 @@ package com.example.access;
  */
 public class Views {
 
-    public static class Public {
+    public interface Public {
     }
 }
