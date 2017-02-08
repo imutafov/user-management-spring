@@ -1,6 +1,7 @@
 package com.example.user;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,17 +10,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     public User findByUserName(String userName);
 
-    public List<User> findByFirstNameLike(String firstName);
+    public Page<User> findByFirstNameLike(String firstName, Pageable pageRequest);
 
-    public List<User> findAllByOrderByLastName();
+    public Page<User> findByEnabledTrue(Pageable pageRequest);
 
-    public List<User> findAllByOrderByLastNameDesc();
-
-    public List<User> findAllByOrderByBirthDate();
-
-    public List<User> findAllByOrderByBirthDateDesc();
-
-    public List<User> findByEnabledTrue();
-
-    public List<User> findByEnabledFalse();
+    public Page<User> findByEnabledFalse(Pageable pageRequest);
 }
