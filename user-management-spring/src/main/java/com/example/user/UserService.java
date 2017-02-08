@@ -1,8 +1,9 @@
 package com.example.user;
 
 import com.example.mail.SendMailTLS;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,8 +30,8 @@ public class UserService {
         return repo.save(user);
     }
 
-    public List<User> getAllUsers() {
-        return repo.findAll();
+    public Page<User> getAllUsers(Pageable pageRequest) {
+        return repo.findAll(pageRequest);
     }
 
     public User remove(Long id) throws Exception {
@@ -56,32 +57,16 @@ public class UserService {
         return repo.save(dbUser);
     }
 
-    public List<User> findByFirstName(String firstName) {
-        return repo.findByFirstNameLike(firstName);
+    public Page<User> findByFirstName(String firstName, Pageable pageRequest) {
+        return repo.findByFirstNameLike(firstName, pageRequest);
     }
 
-    public List<User> getAllOrderByLastNameAsc() {
-        return repo.findAllByOrderByLastName();
+    public Page<User> getAllFlaggedUsers(Pageable pageRequest) {
+        return repo.findByEnabledTrue(pageRequest);
     }
 
-    public List<User> getAllOrderByLastNameDesc() {
-        return repo.findAllByOrderByLastNameDesc();
-    }
-
-    public List<User> getAllOrderByDateAsc() {
-        return repo.findAllByOrderByLastName();
-    }
-
-    public List<User> getAllOrderByDateDesc() {
-        return repo.findAllByOrderByLastNameDesc();
-    }
-
-    public List<User> getAllFlaggedUsers() {
-        return repo.findByEnabledTrue();
-    }
-
-    public List<User> getAllUnflaggedUsers() {
-        return repo.findByEnabledFalse();
+    public Page<User> getAllUnflaggedUsers(Pageable pageRequest) {
+        return repo.findByEnabledFalse(pageRequest);
     }
 
     public User changeFlag(String name) {
