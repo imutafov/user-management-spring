@@ -60,7 +60,7 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
     @JsonView(Views.Public.class)
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    @RequestMapping(value = "/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public List<User> getAllUsers(Pageable pageRequest) {
         return service.getAllUsers(pageRequest).getContent();
