@@ -1,6 +1,9 @@
 package com.example.user;
 
+import com.example.access.Privilege;
+import com.example.access.Views;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,14 +34,21 @@ public class User implements Serializable, UserDetails {
     @Column(name = "USER_ID")
     private long userId;
 
+    @JsonView(Views.Public.class)
     @Column(name = "USERNAME")
     private String userName;
+
     private String password;
 
+    @JsonView(Views.Public.class)
     @Column(name = "FIRSTNAME")
     private String firstName;
+
+    @JsonView(Views.Public.class)
     @Column(name = "LASTNAME")
     private String lastName;
+
+    @JsonView(Views.Public.class)
     private Date birthDate;
     private String phoneNumber;
     private String email;

@@ -1,8 +1,10 @@
 package com.example.user;
 
+import com.example.access.Views;
 import com.example.exceptions.UserNotFoundException;
 import com.example.security.UserAuthenticationResponse;
 import com.example.security.UserTokenUtil;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +42,7 @@ public class UserController {
         return service.save(user);
     }
 
+    @JsonView(Views.Public.class)
     @RequestMapping(value = "/user/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity create(@RequestBody User user) throws UnsupportedEncodingException {
@@ -55,6 +58,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
+    @JsonView(Views.Public.class)
     @RequestMapping(value = "/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public List<User> getAllUsers() {
@@ -80,6 +84,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
+    @JsonView(Views.Public.class)
     @RequestMapping(value = "/users/search/{firstName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public List<User> search(@PathVariable String firstName) throws Exception {
@@ -87,6 +92,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
+    @JsonView(Views.Public.class)
     @RequestMapping(value = "/users/sort/lastname/a", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public List<User> getAllOrderByLastNameAsc() {
@@ -94,6 +100,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
+    @JsonView(Views.Public.class)
     @RequestMapping(value = "/users/sort/lastname/d", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public List<User> getAllOrderByLastNameDesc() {
@@ -101,6 +108,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
+    @JsonView(Views.Public.class)
     @RequestMapping(value = "/users/sort/date/a", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public List<User> getAllOrderByDateAsc() {
@@ -108,6 +116,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
+    @JsonView(Views.Public.class)
     @RequestMapping(value = "/users/sort/date/d", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public List<User> getAllOrderByDateDesc() {
@@ -135,6 +144,7 @@ public class UserController {
         return service.changeFlag(name);
     }
 
+    @JsonView(Views.Public.class)
     @RequestMapping(value = "user/auth", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public User enableUser(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
@@ -146,6 +156,7 @@ public class UserController {
         return user;
     }
 
+    @JsonView(Views.Public.class)
     @RequestMapping(value = "user/auth/{token}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public User enableUser(@PathVariable String token) {
         String username = userTokenUtil.getUsernameFromToken(token);
@@ -155,19 +166,4 @@ public class UserController {
         }
         return user;
     }
-
-//       public ResponseEntity<?> createToken(User user) throws UnsupportedEncodingException {
-//
-//        final Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        authenticationRequest.getUsername(),
-//                        authenticationRequest.getPassword()
-//                )
-//        );
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//               final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-//        final String token = userTokenUtil.generateToken(user);
-//
-//        return ResponseEntity.ok(new UserAuthenticationResponse(token));
-//    }
 }
