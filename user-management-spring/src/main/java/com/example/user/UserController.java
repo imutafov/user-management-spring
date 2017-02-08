@@ -9,9 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserController {
-
-    private static final int PAGE_SIZE = 5;
 
     private String tokenHeader = "Authorization";
 
@@ -64,10 +60,10 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
     @JsonView(Views.Public.class)
-    @RequestMapping(value = "/users/{page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
-    public List<User> getAllUsers(@PathVariable Integer page) {
-        Pageable pageRequest = new PageRequest(page, PAGE_SIZE);
+    public List<User> getAllUsers(Pageable pageRequest) {
+        System.out.println(pageRequest.toString());
         return service.getAllUsers(pageRequest).getContent();
     }
 
@@ -91,62 +87,23 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
     @JsonView(Views.Public.class)
-    @RequestMapping(value = "/users/search/{firstName}/{page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/users/search/{firstName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public List<User> search(@PathVariable String firstName, @PathVariable Integer page) throws Exception {
-        Pageable pageRequest = new PageRequest(page, PAGE_SIZE);
+    public List<User> search(@PathVariable String firstName, Pageable pageRequest) throws Exception {
         return service.findByFirstName(firstName, pageRequest).getContent();
     }
 
-    @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
-    @JsonView(Views.Public.class)
-    @RequestMapping(value = "/users/sort/lastname/a/{page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(value = HttpStatus.OK)
-    public List<User> getAllOrderByLastNameAsc(@PathVariable Integer page) {
-        Pageable pageRequest = new PageRequest(page, PAGE_SIZE, Sort.Direction.ASC, "lastName");
-        return service.getAllUsers(pageRequest).getContent();
-    }
-
-    @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
-    @JsonView(Views.Public.class)
-    @RequestMapping(value = "/users/sort/lastname/d/{page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(value = HttpStatus.OK)
-    public List<User> getAllOrderByLastNameDesc(@PathVariable Integer page) {
-        Pageable pageRequest = new PageRequest(page, PAGE_SIZE, Sort.Direction.DESC, "lastName");
-        return service.getAllUsers(pageRequest).getContent();
-    }
-
-    @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
-    @JsonView(Views.Public.class)
-    @RequestMapping(value = "/users/sort/date/a/{page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(value = HttpStatus.OK)
-    public List<User> getAllOrderByDateAsc(@PathVariable Integer page) {
-        Pageable pageRequest = new PageRequest(page, PAGE_SIZE, Sort.Direction.ASC, "date");
-        return service.getAllUsers(pageRequest).getContent();
-    }
-
-    @PreAuthorize("hasAuthority('PERM_VIEW_USER')")
-    @JsonView(Views.Public.class)
-    @RequestMapping(value = "/users/sort/date/d/{page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(value = HttpStatus.OK)
-    public List<User> getAllOrderByDateDesc(@PathVariable Integer page) {
-        Pageable pageRequest = new PageRequest(page, PAGE_SIZE, Sort.Direction.DESC, "date");
-        return service.getAllUsers(pageRequest).getContent();
-    }
-
     @PreAuthorize("hasAuthority('ADMIN')")
-    @RequestMapping(value = "/users/flagged/{page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/users/flagged", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public List<User> getAllFlaggedUsers(@PathVariable Integer page) {
-        Pageable pageRequest = new PageRequest(page, PAGE_SIZE);
+    public List<User> getAllFlaggedUsers(Pageable pageRequest) {
         return service.getAllFlaggedUsers(pageRequest).getContent();
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @RequestMapping(value = "/users/unflagged/{page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/users/unflagged", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public List<User> getAllUnflaggedUsers(@PathVariable Integer page) {
-        Pageable pageRequest = new PageRequest(page, PAGE_SIZE);
+    public List<User> getAllUnflaggedUsers(Pageable pageRequest) {
         return service.getAllUnflaggedUsers(pageRequest).getContent();
     }
 
