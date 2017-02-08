@@ -63,7 +63,6 @@ public class UserController {
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     public List<User> getAllUsers(Pageable pageRequest) {
-        System.out.println(pageRequest.toString());
         return service.getAllUsers(pageRequest).getContent();
     }
 
