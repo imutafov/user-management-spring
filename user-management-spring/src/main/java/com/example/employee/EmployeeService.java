@@ -5,8 +5,6 @@
  */
 package com.example.employee;
 
-import com.example.employer.EmployerRepository;
-import com.example.user.UserRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,12 +18,6 @@ public class EmployeeService {
 
     @Autowired
     private EmployeeRepository repo;
-
-    @Autowired
-    private UserRepository userRepo;
-
-    @Autowired
-    private EmployerRepository employerRepo;
 
     public Employee save(Employee empl) {
         return repo.save(empl);
@@ -55,7 +47,7 @@ public class EmployeeService {
         dbEmpl.setCommission(empl.getCommission());
         return repo.save(dbEmpl);
     }
-  
+
     public EmployeeDTO getEmployeeByUserName(String userName) {
         Employee empl = repo.findByUserUserName(userName);
         return EmployeeMapper.mapEntityIntoDTO(empl);
