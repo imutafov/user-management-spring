@@ -66,13 +66,10 @@ public class EmployerController {
     @RequestMapping(value = "/employer/employee/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public Employee update(@PathVariable Long id, @RequestBody Employee employee) throws Exception {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Employer employer = service.getByUsername(auth.getName());
         return employeeService.update(id, employee);
     }
 
     public boolean isOwner(String username, Long id) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employer employer = service.getByUsername(username);
         Employee employee = employeeService.getById(id);
         if ((employer.getEmployees().contains(employee))) {
