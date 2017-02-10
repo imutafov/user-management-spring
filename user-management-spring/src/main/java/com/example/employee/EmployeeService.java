@@ -55,5 +55,27 @@ public class EmployeeService {
         dbEmpl.setCommission(empl.getCommission());
         return repo.save(dbEmpl);
     }
+  
+    public EmployeeDTO getEmployeeByUserName(String userName) {
+        Employee empl = repo.findByUserUserName(userName);
+        return EmployeeMapper.mapEntityIntoDTO(empl);
+    }
+
+    public EmployeeDTO update(String userName, EmployeeDTO employee) throws Exception {
+        Employee empl = repo.findByUserUserName(userName);
+        if (empl == null) {
+            throw new Exception("User not found");
+        }
+
+        empl.setFirstName(employee.getFirstName());
+        empl.setMiddleName(employee.getMiddleName());
+        empl.setLastName(employee.getLastName());
+        empl.setDob(employee.getDob());
+        empl.setSex(employee.getSex());
+        empl.setPhoneNumber(employee.getPhoneNumber());
+
+        repo.save(empl);
+        return getEmployeeByUserName(userName);
+    }
 
 }

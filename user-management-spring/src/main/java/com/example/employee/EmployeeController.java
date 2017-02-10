@@ -9,6 +9,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,6 +37,21 @@ public class EmployeeController {
     @ResponseStatus(value = HttpStatus.OK)
     public List<Employee> getAllEmployees() {
         return service.getAllEmployees();
+    }
+
+    @RequestMapping(value = "/employee/me", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
+    public EmployeeDTO currentEmployee() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        EmployeeDTO empl = service.getEmployeeByUserName(auth.getName());
+        return empl;
+    }
+
+    @RequestMapping(value = "/employee/me", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
+    public EmployeeDTO update(@RequestBody EmployeeDTO empl) throws Exception {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return service.update(auth.getName(), empl);
     }
 
 }
