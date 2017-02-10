@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,9 +62,22 @@ public class EmployerController {
         return employeeService.getEmployeesByEmployer(empl.getUser().getUsername());
     }
 
+    @PreAuthorize("this.isOwner(principal.username, #id)")
     @RequestMapping(value = "/employer/employee/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public Employee update(@PathVariable Long id, @RequestBody Employee empl) throws Exception {
-        return employeeService.update(id, empl);
+    public Employee update(@PathVariable Long id, @RequestBody Employee employee) throws Exception {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employer employer = service.getByUsername(auth.getName());
+        return employeeService.update(id, employee);
+    }
+
+    public boolean isOwner(String username, Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employer employer = service.getByUsername(username);
+        Employee employee = employeeService.getById(id);
+        if ((employer.getEmployees().contains(employee))) {
+            return true;
+        }
+        return false;
     }
 }

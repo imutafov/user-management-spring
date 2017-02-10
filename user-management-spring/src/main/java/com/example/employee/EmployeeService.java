@@ -31,6 +31,10 @@ public class EmployeeService {
         return repo.save(empl);
     }
 
+    public Employee getById(Long id) {
+        return repo.findOne(id);
+    }
+
     public List<Employee> getAllEmployees() {
         return repo.findAll();
     }
