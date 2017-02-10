@@ -37,4 +37,8 @@ public class EmployerService {
         return repo.findAll();
     }
 
+    public Employer getByUsername(String username) {
+        return repo.findByUserUserName(username);
+    }
+
 }
