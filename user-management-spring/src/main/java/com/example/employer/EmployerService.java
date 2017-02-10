@@ -5,9 +5,6 @@
  */
 package com.example.employer;
 
-import com.example.employee.Employee;
-import com.example.user.UserRepository;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,19 +19,13 @@ public class EmployerService {
     @Autowired
     private EmployerRepository repo;
 
-    @Autowired
-    private UserRepository userRepo;
-
     public Employer save(Employer empl) {
-        empl.setUser(userRepo.findOne(3L));
-        List<Employee> employees = new ArrayList<Employee>();
-        employees.add(new Employee());
-        employees.add(new Employee());
         return repo.save(empl);
     }
 
-    public List<Employer> getAllEmployers() {
-        return repo.findAll();
+    public List<EmployerDTO> getAllEmployers() {
+        List<Employer> employers = repo.findAll();
+        return EmployerMapper.mapEntitiesIntoDTOs(employers);
     }
 
     public Employer getByUsername(String username) {

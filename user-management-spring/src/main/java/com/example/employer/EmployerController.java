@@ -40,9 +40,10 @@ public class EmployerController {
         return service.save(empl);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = "/employers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public List<Employer> getAllEmployers() {
+    public List<EmployerDTO> getAllEmployers() {
         return service.getAllEmployers();
     }
 
