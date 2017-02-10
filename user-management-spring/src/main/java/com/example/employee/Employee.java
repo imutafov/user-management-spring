@@ -7,8 +7,10 @@ package com.example.employee;
 
 import com.example.employer.Employer;
 import com.example.user.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Currency;
+import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,6 +37,21 @@ public class Employee implements Serializable {
     @Column(name = "EMPLOYEE_ID")
     private Long id;
 
+    private String employeeNumber;
+    private String firstName;
+    private String middleName;
+    private String lastName;
+    private Long workDeptId;
+    private String phoneNumber;
+    private Date hireDate;
+    private String job;
+    private Integer educationLvl;
+    private String sex;
+    private Date dob;
+    private Currency salary;
+    private Currency bonus;
+    private Currency commission;
+
     @OneToOne
     @JoinColumn(name = "USER_ID")
     private User user;
@@ -44,7 +61,7 @@ public class Employee implements Serializable {
         @JoinColumn(name = "EMPLOYEE_ID")},
             inverseJoinColumns = {
                 @JoinColumn(name = "EMPLOYER_ID")})
-    @JsonBackReference
+    @JsonIgnore
     private Employer employer;
 
     public Employer getEmployer() {
