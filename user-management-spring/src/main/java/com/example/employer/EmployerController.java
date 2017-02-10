@@ -5,12 +5,15 @@
  */
 package com.example.employer;
 
+import com.example.employee.Employee;
+import com.example.employee.EmployeeService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +29,9 @@ public class EmployerController {
 
     @Autowired
     private EmployerService service;
+
+    @Autowired
+    private EmployeeService employeeService;
 
     @RequestMapping(value = "/employer", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
@@ -45,5 +51,19 @@ public class EmployerController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employer empl = service.getByUsername(auth.getName());
         return empl.getEmployees().size();
+    }
+
+    @RequestMapping(value = "/employer/employees", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<Employee> getOwnEmployees() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employer empl = service.getByUsername(auth.getName());
+        return employeeService.getEmployeesByEmployer(empl.getUser().getUsername());
+    }
+
+    @RequestMapping(value = "/employer/employee/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
+    public Employee update(@PathVariable Long id, @RequestBody Employee empl) throws Exception {
+        return employeeService.update(id, empl);
     }
 }

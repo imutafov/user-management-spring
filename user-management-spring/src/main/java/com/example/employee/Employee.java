@@ -9,7 +9,7 @@ import com.example.employer.Employer;
 import com.example.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.Currency;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -48,9 +48,9 @@ public class Employee implements Serializable {
     private Integer educationLvl;
     private String sex;
     private Date dob;
-    private Currency salary;
-    private Currency bonus;
-    private Currency commission;
+    private BigDecimal salary;
+    private BigDecimal bonus;
+    private BigDecimal commission;
 
     @OneToOne
     @JoinColumn(name = "USER_ID")

@@ -35,4 +35,21 @@ public class EmployeeService {
         return repo.findAll();
     }
 
+    public List<Employee> getEmployeesByEmployer(String employerName) {
+        return repo.findByEmployerUserUserName(employerName);
+    }
+
+    public Employee update(Long id, Employee empl) throws Exception {
+        Employee dbEmpl = repo.findOne(id);
+        if (empl == null) {
+            throw new Exception("Employee not found");
+        }
+        dbEmpl.setWorkDeptId(empl.getWorkDeptId());
+        dbEmpl.setJob(empl.getJob());
+        dbEmpl.setSalary(empl.getSalary());
+        dbEmpl.setBonus(empl.getBonus());
+        dbEmpl.setCommission(empl.getCommission());
+        return repo.save(dbEmpl);
+    }
+
 }
