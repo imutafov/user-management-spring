@@ -46,6 +46,13 @@ public class EmployerController {
         return service.getAllEmployers();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value = "/employers/admin", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<EmployerDTOAdmin> getAllEmployersFilterd() {
+        return EmployerMapper.mapEntitiesIntoDTOs(service.getAllEmployers());
+    }
+
     @RequestMapping(value = "/employer/employeecount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public Integer getEmployeeCount() {
