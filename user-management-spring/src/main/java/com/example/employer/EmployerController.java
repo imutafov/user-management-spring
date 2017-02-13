@@ -37,7 +37,7 @@ public class EmployerController {
 
     @RequestMapping(value = "/employers", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public Employer save(@RequestBody Employer empl) {
+    public EmployerDTO save(@RequestBody Employer empl) {
         return service.save(empl);
     }
 

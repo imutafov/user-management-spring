@@ -20,12 +20,13 @@ public class EmployerService {
     @Autowired
     private EmployerRepository repo;
 
-    public Employer save(Employer empl) {
-        return repo.save(empl);
+    public EmployerDTO save(Employer empl) {
+        return EmployerMapper.mapEntityIntoDTO(repo.save(empl));
     }
 
-    public Page<Employer> getAllEmployers(Pageable pageRequest) {
-        return repo.findAll(pageRequest);
+    public Page<EmployerDTO> getAllEmployers(Pageable pageRequest) {
+        Page<Employer> employers = repo.findAll(pageRequest);
+        return EmployerMapper.mapEntityPageIntoDTOPage(pageRequest, employers);
     }
 
     public Employer getByUsername(String username) {
