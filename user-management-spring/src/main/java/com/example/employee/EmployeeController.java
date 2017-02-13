@@ -5,13 +5,17 @@
  */
 package com.example.employee;
 
+import com.example.employer.Employer;
+import com.example.employer.EmployerService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,6 +32,9 @@ public class EmployeeController {
     @Autowired
     private EmployeeService service;
 
+    @Autowired
+    private EmployerService employerService;
+
     @RequestMapping(value = "/employees", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public Employee save(@RequestBody Employee empl) {
@@ -38,6 +45,13 @@ public class EmployeeController {
     @ResponseStatus(value = HttpStatus.OK)
     public List<EmployeeDTO> getAllEmployees(Pageable pageRequest) {
         return service.getAllEmployees(pageRequest).getContent();
+    }
+
+    @PreAuthorize("this.isOwner(principal.username, #id)")
+    @RequestMapping(value = "/employees/active/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
+    public Employee activate(@PathVariable Long id) {
+        return service.changeActive(id);
     }
 
     @RequestMapping(value = "/employees/self", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -55,4 +69,12 @@ public class EmployeeController {
         return service.update(auth.getName(), empl);
     }
 
+    public boolean isOwner(String username, Long id) {
+        Employer employer = employerService.getByUsername(username);
+        Employee employee = service.getById(id);
+        if ((employer.getEmployees().contains(employee))) {
+            return true;
+        }
+        return false;
+    }
 }

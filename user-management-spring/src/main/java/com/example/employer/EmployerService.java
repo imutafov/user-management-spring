@@ -33,4 +33,11 @@ public class EmployerService {
         return repo.findByUserUserName(username);
     }
 
+    public Employer changeActive(Long id) {
+        Employer empl = repo.findOne(id);
+        empl.getUser().setEnabled(!empl.getUser().isEnabled());
+        repo.save(empl);
+        return empl;
+    }
+
 }

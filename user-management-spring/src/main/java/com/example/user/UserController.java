@@ -102,10 +102,10 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @RequestMapping(value = "/users/change/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/users/active/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public User changeUserFlag(@PathVariable Long id) {
-        return service.changeFlag(id);
+    public User activate(@PathVariable Long id) {
+        return service.changeActive(id);
     }
 
     @RequestMapping(value = "users/authorization", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

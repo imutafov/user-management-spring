@@ -72,4 +72,11 @@ public class EmployeeService {
         return getEmployeeByUserName(userName);
     }
 
+    public Employee changeActive(Long id) {
+        Employee empl = repo.findOne(id);
+        empl.getUser().setEnabled(!empl.getUser().isEnabled());
+        repo.save(empl);
+        return empl;
+    }
+
 }

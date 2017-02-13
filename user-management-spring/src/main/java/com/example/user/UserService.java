@@ -31,7 +31,6 @@ public class UserService {
     }
 
     public Page<UserDTO> getAllUsers(Pageable pageRequest) {
-
         Page<User> resultPage = repo.findAll(pageRequest);
         return UserMapper.mapEntityPageIntoDTOPage(pageRequest, resultPage);
     }
@@ -72,7 +71,7 @@ public class UserService {
         return repo.findByEnabledFalse(pageRequest);
     }
 
-    public User changeFlag(Long id) {
+    public User changeActive(Long id) {
         User user = repo.findByUserId(id);
         user.setEnabled(!user.isEnabled());
         repo.save(user);
