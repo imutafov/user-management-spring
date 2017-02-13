@@ -10,8 +10,8 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class EmployerDTOAdmin {
+public class EmployerDTO {
 
     private Long id;
-    private List<Employee> employes;
+    private List<Employee> employees;
 }

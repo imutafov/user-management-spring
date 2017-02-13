@@ -5,8 +5,9 @@
  */
 package com.example.employer;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,8 +24,8 @@ public class EmployerService {
         return repo.save(empl);
     }
 
-    public List<Employer> getAllEmployers() {
-        return repo.findAll();
+    public Page<Employer> getAllEmployers(Pageable pageRequest) {
+        return repo.findAll(pageRequest);
     }
 
     public Employer getByUsername(String username) {

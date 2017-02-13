@@ -9,6 +9,7 @@ import com.example.employee.Employee;
 import com.example.employee.EmployeeService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,8 +44,8 @@ public class EmployerController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = "/employers/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public List<EmployerDTOAdmin> getAllEmployersFiltered() {
-        return EmployerMapper.mapEntitiesIntoDTOs(service.getAllEmployers());
+    public List<EmployerDTO> getAllEmployersFiltered(Pageable pageRequest) {
+        return EmployerMapper.mapEntitiesIntoDTOs(service.getAllEmployers(pageRequest).getContent());
     }
 
     @RequestMapping(value = "/employers/employeecount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,10 +58,10 @@ public class EmployerController {
 
     @RequestMapping(value = "/employers/employees", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public List<Employee> getOwnEmployees() {
+    public List<Employee> getOwnEmployees(Pageable pageRequest) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employer empl = service.getByUsername(auth.getName());
-        return employeeService.getEmployeesByEmployer(empl.getUser().getUsername());
+        return employeeService.getEmployeesByEmployer(empl.getUser().getUsername(), pageRequest).getContent();
     }
 
     @PreAuthorize("this.isOwner(principal.username, #id)")

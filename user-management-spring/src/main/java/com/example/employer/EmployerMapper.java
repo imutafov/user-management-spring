@@ -10,17 +10,17 @@ import java.util.stream.Collectors;
 
 public class EmployerMapper {
 
-    public static List<EmployerDTOAdmin> mapEntitiesIntoDTOs(List<Employer> employers) {
+    public static List<EmployerDTO> mapEntitiesIntoDTOs(List<Employer> employers) {
         return employers.stream()
                 .map(EmployerMapper::mapEntityIntoDTO)
                 .collect(Collectors.toList());
     }
 
-    public static EmployerDTOAdmin mapEntityIntoDTO(Employer employer) {
+    public static EmployerDTO mapEntityIntoDTO(Employer employer) {
 
-        EmployerDTOAdmin dto = new EmployerDTOAdmin();
+        EmployerDTO dto = new EmployerDTO();
         dto.setId(employer.getId());
-        dto.setEmployes(employer.getEmployees());
+        dto.setEmployees(employer.getEmployees());
         return dto;
     }
 

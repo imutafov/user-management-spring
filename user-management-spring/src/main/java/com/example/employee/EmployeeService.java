@@ -5,8 +5,9 @@
  */
 package com.example.employee;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,12 +28,12 @@ public class EmployeeService {
         return repo.findOne(id);
     }
 
-    public List<Employee> getAllEmployees() {
-        return repo.findAll();
+    public Page<Employee> getAllEmployees(Pageable pageRequest) {
+        return repo.findAll(pageRequest);
     }
 
-    public List<Employee> getEmployeesByEmployer(String employerName) {
-        return repo.findByEmployerUserUserName(employerName);
+    public Page<Employee> getEmployeesByEmployer(String employerName, Pageable pageRequest) {
+        return repo.findByEmployerUserUserName(employerName, pageRequest);
     }
 
     public Employee update(Long id, Employee empl) throws Exception {
