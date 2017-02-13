@@ -18,4 +18,16 @@ public class TaskService {
         return repo.save(task);
     }
 
+    public Task getById(Long id) {
+        return repo.findOne(id);
+    }
+
+    public TaskDTO logWork(Long id, Task task) throws Exception {
+        Task dbTask = repo.findOne(id);
+        if (dbTask == null) {
+            throw new Exception("Task not found");
+        }
+        dbTask.setProgress(task.getProgress());
+        return TaskMapper.mapEntityIntoDTO(repo.save(dbTask));
+    }
 }

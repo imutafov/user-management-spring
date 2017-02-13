@@ -25,11 +25,11 @@ import lombok.Data;
 @Data
 public class Task {
 
-//Нека да има work logging 
-//– employers да създават/задават задачи 
-//само за собствените си employees 
+//Нека да има work logging
+//– employers да създават/задават задачи
+//само за собствените си employees
 //free text title за задачата + към кого е assgin-ата задачата /може да е повече от един/
-//– еmployees да имат възможност да логват какво е изпълнено /free text/ към задачата /може върху повече от една да е/ която работят    
+//– еmployees да имат възможност да логват какво е изпълнено /free text/ към задачата /може върху повече от една да е/ която работят
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "WORKLOG_ID")
@@ -37,7 +37,7 @@ public class Task {
 
     private String title;
 
-    private String worksProgress;
+    private String progress;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "EMPLOYEE_WORKLOGS", joinColumns = {
