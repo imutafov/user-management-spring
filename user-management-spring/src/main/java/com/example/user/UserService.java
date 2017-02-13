@@ -72,8 +72,8 @@ public class UserService {
         return repo.findByEnabledFalse(pageRequest);
     }
 
-    public User changeFlag(String name) {
-        User user = repo.findByUserName(name);
+    public User changeFlag(Long id) {
+        User user = repo.findByUserId(id);
         user.setEnabled(!user.isEnabled());
         repo.save(user);
         return user;
