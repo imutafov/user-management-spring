@@ -45,7 +45,7 @@ public class EmployerController {
     @RequestMapping(value = "/employers/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public List<EmployerDTO> getAllEmployersFiltered(Pageable pageRequest) {
-        return EmployerMapper.mapEntitiesIntoDTOs(service.getAllEmployers(pageRequest).getContent());
+        return service.getAllEmployers(pageRequest).getContent();
     }
 
     @RequestMapping(value = "/employers/employeecount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
