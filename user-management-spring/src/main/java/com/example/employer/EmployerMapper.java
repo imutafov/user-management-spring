@@ -7,6 +7,9 @@ package com.example.employer;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 public class EmployerMapper {
 
@@ -22,6 +25,11 @@ public class EmployerMapper {
         dto.setId(employer.getId());
         dto.setEmployees(employer.getEmployees());
         return dto;
+    }
+
+    public static Page<EmployerDTO> mapEntityPageIntoDTOPage(Pageable page, Page<Employer> source) {
+        List<EmployerDTO> dtos = mapEntitiesIntoDTOs(source.getContent());
+        return new PageImpl<>(dtos, page, source.getTotalElements());
     }
 
 }
