@@ -34,26 +34,20 @@ public class EmployerController {
     @Autowired
     private EmployeeService employeeService;
 
-    @RequestMapping(value = "/employer", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/employers", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public Employer save(@RequestBody Employer empl) {
         return service.save(empl);
     }
 
-    @RequestMapping(value = "/employers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(value = HttpStatus.OK)
-    public List<Employer> getAllEmployers() {
-        return service.getAllEmployers();
-    }
-
     @PreAuthorize("hasAuthority('ADMIN')")
-    @RequestMapping(value = "/employers/admin", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/employers/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public List<EmployerDTOAdmin> getAllEmployersFilterd() {
+    public List<EmployerDTOAdmin> getAllEmployersFiltered() {
         return EmployerMapper.mapEntitiesIntoDTOs(service.getAllEmployers());
     }
 
-    @RequestMapping(value = "/employer/employeecount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/employers/employeecount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public Integer getEmployeeCount() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -61,7 +55,7 @@ public class EmployerController {
         return empl.getEmployees().size();
     }
 
-    @RequestMapping(value = "/employer/employees", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/employers/employees", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public List<Employee> getOwnEmployees() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -70,7 +64,7 @@ public class EmployerController {
     }
 
     @PreAuthorize("this.isOwner(principal.username, #id)")
-    @RequestMapping(value = "/employer/employee/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/employers/employees/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public Employee update(@PathVariable Long id, @RequestBody Employee employee) throws Exception {
         return employeeService.update(id, employee);

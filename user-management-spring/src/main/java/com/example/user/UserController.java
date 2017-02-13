@@ -35,13 +35,13 @@ public class UserController {
     private UserDetailsService userDetailsService;
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(value = HttpStatus.OK)
+    @RequestMapping(value = "/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.CREATED)
     public User save(@RequestBody User user) {
         return service.save(user);
     }
 
-    @RequestMapping(value = "/user/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/users/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity create(@RequestBody User user) throws UnsupportedEncodingException {
 
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('PERM_DELETE_USER')")
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public User remove(@PathVariable Long id) {
         try {
@@ -74,7 +74,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('PERM_EDIT_USER')")
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public User update(@PathVariable Long id, @RequestBody User user) throws Exception {
         return service.update(id, user);
@@ -102,13 +102,13 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @RequestMapping(value = "/user/change/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/users/change/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public User changeUserFlag(@PathVariable String name) {
         return service.changeFlag(name);
     }
 
-    @RequestMapping(value = "user/auth", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "users/authorization", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserDTO enableUser(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
         String username = userTokenUtil.getUsernameFromToken(token);
@@ -120,7 +120,7 @@ public class UserController {
         return dto;
     }
 
-    @RequestMapping(value = "user/auth/{token}/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "users/authorization/{token}/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserDTO enableUser(@PathVariable String token) {
         String username = userTokenUtil.getUsernameFromToken(token);
         System.out.println("USERNAME FROM TOKEN " + username);

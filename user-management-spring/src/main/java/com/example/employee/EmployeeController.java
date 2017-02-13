@@ -27,7 +27,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeService service;
 
-    @RequestMapping(value = "/employee", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/employees", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public Employee save(@RequestBody Employee empl) {
         return service.save(empl);
@@ -39,7 +39,7 @@ public class EmployeeController {
         return service.getAllEmployees();
     }
 
-    @RequestMapping(value = "/employee/me", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/employees/self", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public EmployeeDTO currentEmployee() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -47,7 +47,7 @@ public class EmployeeController {
         return empl;
     }
 
-    @RequestMapping(value = "/employee/me", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/employees/", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public EmployeeDTO update(@RequestBody EmployeeDTO empl) throws Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
