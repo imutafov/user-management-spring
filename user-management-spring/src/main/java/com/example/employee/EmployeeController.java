@@ -36,7 +36,7 @@ public class EmployeeController {
 
     @RequestMapping(value = "/employees", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public List<Employee> getAllEmployees(Pageable pageRequest) {
+    public List<EmployeeDTO> getAllEmployees(Pageable pageRequest) {
         return service.getAllEmployees(pageRequest).getContent();
     }
 
