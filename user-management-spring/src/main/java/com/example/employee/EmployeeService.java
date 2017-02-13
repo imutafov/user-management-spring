@@ -28,8 +28,9 @@ public class EmployeeService {
         return repo.findOne(id);
     }
 
-    public Page<Employee> getAllEmployees(Pageable pageRequest) {
-        return repo.findAll(pageRequest);
+    public Page<EmployeeDTO> getAllEmployees(Pageable pageRequest) {
+        Page<Employee> resultPage = repo.findAll(pageRequest);
+        return EmployeeMapper.mapEntityPageIntoDTOPage(pageRequest, resultPage);
     }
 
     public Page<Employee> getEmployeesByEmployer(String employerName, Pageable pageRequest) {
