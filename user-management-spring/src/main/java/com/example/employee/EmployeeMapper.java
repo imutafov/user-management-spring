@@ -15,7 +15,7 @@ public class EmployeeMapper {
 
     public static List<EmployeeDTO> mapEntitiesIntoDTOs(List<Employee> employees) {
         return employees.stream()
-                .map((employee) -> EmployeeMapper.mapEntityIntoDTO(employee))
+                .map(EmployeeMapper::mapEntityIntoDTO)
                 .collect(Collectors.toList());
     }
 

@@ -48,6 +48,13 @@ public class EmployerController {
         return service.getAllEmployers(pageRequest).getContent();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value = "/employers/active/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
+    public Employer activate(@PathVariable Long id) {
+        return service.changeActive(id);
+    }
+
     @RequestMapping(value = "/employers/employeecount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public Integer getEmployeeCount() {
