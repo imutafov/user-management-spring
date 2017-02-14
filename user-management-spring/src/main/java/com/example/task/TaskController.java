@@ -9,13 +9,13 @@ import com.example.employee.Employee;
 import com.example.employee.EmployeeService;
 import com.example.employer.Employer;
 import com.example.employer.EmployerService;
+import com.example.user.User;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,9 +41,8 @@ public class TaskController {
 
     @RequestMapping(value = "/tasks", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public Task createTask(@RequestBody Task task) throws Exception {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Employer employer = employerService.getByUsername(auth.getName());
+    public Task createTask(@RequestBody Task task, @AuthenticationPrincipal User user) throws Exception {
+        Employer employer = employerService.getByUsername(user.getUsername());
         List<Employee> employees = task.getAssignees();
         for (Employee employee : employees) {
             if (!isOwner(employer, employee)) {
