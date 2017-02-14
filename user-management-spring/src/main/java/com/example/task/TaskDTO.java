@@ -5,6 +5,9 @@
  */
 package com.example.task;
 
+import com.example.user.User;
+import java.util.Date;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -14,6 +17,9 @@ import lombok.Data;
 @Data
 public class TaskDTO {
 
-    public String progress;
+    private String title;
+    private Date created;
+    private List<Update> updates;
+    private User lastUpdated;
 
 }

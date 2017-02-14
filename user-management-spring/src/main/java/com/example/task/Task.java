@@ -7,8 +7,10 @@ package com.example.task;
 
 import com.example.employee.Employee;
 import com.example.employer.Employer;
+import com.example.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +23,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import lombok.Data;
 
 @Entity(name = "TASK")
@@ -34,7 +41,15 @@ public class Task implements Serializable {
 
     private String title;
 
-    private String progress;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Update> updates;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
+
+    @OneToOne
+    @JoinColumn(name = "USER_ID")
+    private User lastUpdated;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "EMPLOYEE_TASKS", joinColumns = {
@@ -53,4 +68,8 @@ public class Task implements Serializable {
     )
     private Employer assigner;
 
+    @PrePersist
+    void setCreated() {
+        this.created = new Date();
+    }
 }
