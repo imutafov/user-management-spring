@@ -55,10 +55,10 @@ public class EmployeeController {
 
     @RequestMapping(value = "/employees/tasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public List<TaskDTO> getTasks() {
+    public List<TaskDTO> getTasks(Pageable pageRequest) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee empl = service.getEmployeeByUserName(auth.getName());
-        return taskService.getByEmployeeId(empl.getId());
+        return taskService.getByEmployeeId(empl.getId(), pageRequest).getContent();
     }
 
     @RequestMapping(value = "/employees", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

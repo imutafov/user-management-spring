@@ -5,8 +5,9 @@
  */
 package com.example.task;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,8 +24,9 @@ public class TaskService {
         return repo.findOne(id);
     }
 
-    public List<TaskDTO> getByEmployeeId(Long id) {
-        return TaskMapper.mapEntitiesIntoDTOs(repo.findByAssigneesId(id));
+    public Page<TaskDTO> getByEmployeeId(Long id, Pageable pageRequest) {
+        Page<Task> tasks = repo.findByAssigneesId(id, pageRequest);
+        return TaskMapper.mapEntityPageIntoDTOPage(pageRequest, tasks);
     }
 
     public TaskDTO logWork(Long id, Task task) throws Exception {
