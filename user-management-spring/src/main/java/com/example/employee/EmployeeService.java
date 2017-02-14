@@ -28,6 +28,10 @@ public class EmployeeService {
         return repo.findOne(id);
     }
 
+    public Employee getByUsername(String username) {
+        return repo.findByUserUserName(username);
+    }
+
     public Page<EmployeeDTO> getAllEmployees(Pageable pageRequest) {
         Page<Employee> resultPage = repo.findAll(pageRequest);
         return EmployeeMapper.mapEntityPageIntoDTOPage(pageRequest, resultPage);
@@ -50,9 +54,14 @@ public class EmployeeService {
         return repo.save(dbEmpl);
     }
 
-    public EmployeeDTO getEmployeeByUserName(String userName) {
+    public EmployeeDTO getEmployeeDTOByUserName(String userName) {
         Employee empl = repo.findByUserUserName(userName);
         return EmployeeMapper.mapEntityIntoDTO(empl);
+    }
+
+    public Employee getEmployeeByUserName(String userName) {
+        Employee empl = repo.findByUserUserName(userName);
+        return empl;
     }
 
     public EmployeeDTO update(String userName, EmployeeDTO employee) throws Exception {
@@ -69,7 +78,7 @@ public class EmployeeService {
         empl.setPhoneNumber(employee.getPhoneNumber());
 
         repo.save(empl);
-        return getEmployeeByUserName(userName);
+        return getEmployeeDTOByUserName(userName);
     }
 
 }

@@ -6,11 +6,13 @@
 package com.example.employee;
 
 import com.example.employer.Employer;
+import com.example.task.Task;
 import com.example.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +22,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import lombok.Data;
@@ -63,6 +66,13 @@ public class Employee implements Serializable {
                 @JoinColumn(name = "EMPLOYER_ID")})
     @JsonIgnore
     private Employer employer;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "EMPLOYEE_TASKS", joinColumns = {
+        @JoinColumn(name = "EMPLOYEE_ID")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "TASK_ID")})
+    private List<Task> tasks;
 
     public Employer getEmployer() {
         return employer;
