@@ -5,6 +5,8 @@
  */
 package com.example.task;
 
+import com.example.user.User;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,12 +31,17 @@ public class TaskService {
         return TaskMapper.mapEntityPageIntoDTOPage(pageRequest, tasks);
     }
 
-    public TaskDTO logWork(Long id, Task task) throws Exception {
+    public TaskDTO logWork(Long id, String body, User user) throws Exception {
         Task dbTask = repo.findOne(id);
         if (dbTask == null) {
             throw new Exception("Task not found");
         }
-        dbTask.setProgress(task.getProgress());
+        Update update = new Update();
+        update.setBody(body);
+        update.setUpdater(user);
+        List<Update> updates = dbTask.getUpdates();
+        updates.add(update);
+        dbTask.setLastUpdated(user);
         return TaskMapper.mapEntityIntoDTO(repo.save(dbTask));
     }
 }

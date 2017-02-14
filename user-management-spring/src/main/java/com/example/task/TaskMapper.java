@@ -26,7 +26,10 @@ public class TaskMapper {
     public static TaskDTO mapEntityIntoDTO(Task task) {
 
         TaskDTO dto = new TaskDTO();
-        dto.setProgress(task.getProgress());
+        dto.setTitle(task.getTitle());
+        dto.setUpdates(task.getUpdates());
+        dto.setCreated(task.getCreated());
+        dto.setLastUpdated(task.getLastUpdated());
         return dto;
     }
 

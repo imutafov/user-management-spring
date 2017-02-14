@@ -55,8 +55,8 @@ public class TaskController {
     @PreAuthorize("this.isAssignee(principal.username, #id)")
     @RequestMapping(value = "/tasks/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public TaskDTO update(@PathVariable Long id, @RequestBody Task task) throws Exception {
-        return service.logWork(id, task);
+    public TaskDTO update(@PathVariable Long id, @RequestBody String body, @AuthenticationPrincipal User user) throws Exception {
+        return service.logWork(id, body, user);
     }
 
     public boolean isOwner(Employer employer, Employee employee) {
