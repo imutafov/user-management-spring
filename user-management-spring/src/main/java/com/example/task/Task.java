@@ -7,6 +7,7 @@ package com.example.task;
 
 import com.example.employee.Employee;
 import com.example.employer.Employer;
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,16 +24,11 @@ import lombok.Data;
 
 @Entity(name = "TASK")
 @Data
-public class Task {
+public class Task implements Serializable {
 
-//Нека да има work logging
-//– employers да създават/задават задачи
-//само за собствените си employees
-//free text title за задачата + към кого е assgin-ата задачата /може да е повече от един/
-//– еmployees да имат възможност да логват какво е изпълнено /free text/ към задачата /може върху повече от една да е/ която работят
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "WORKLOG_ID")
+    @Column(name = "TASK_ID")
     private Long id;
 
     private String title;
@@ -40,16 +36,16 @@ public class Task {
     private String progress;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "EMPLOYEE_WORKLOGS", joinColumns = {
-        @JoinColumn(name = "WORKLOG_ID")},
+    @JoinTable(name = "EMPLOYEE_TASKS", joinColumns = {
+        @JoinColumn(name = "TASK_ID")},
             inverseJoinColumns = {
                 @JoinColumn(name = "EMPLOYEE_ID")}
     )
     private List<Employee> assignees;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "EMPLOYER_WORKLOGS", joinColumns = {
-        @JoinColumn(name = "WORKLOG_ID")},
+    @JoinTable(name = "EMPLOYER_TASKS", joinColumns = {
+        @JoinColumn(name = "TASK_ID")},
             inverseJoinColumns = {
                 @JoinColumn(name = "EMPLOYER_ID")}
     )

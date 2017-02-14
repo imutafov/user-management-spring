@@ -9,10 +9,13 @@ import com.example.employee.Employee;
 import com.example.employee.EmployeeService;
 import com.example.employer.Employer;
 import com.example.employer.EmployerService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,23 +39,28 @@ public class TaskController {
     @Autowired
     private EmployeeService employeeService;
 
-    @PreAuthorize("this.isOwner(principal.username, #id)")
     @RequestMapping(value = "/tasks", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public Task createTask(@RequestBody Task task) {
+    public Task createTask(@RequestBody Task task) throws Exception {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employer employer = employerService.getByUsername(auth.getName());
+        List<Employee> employees = task.getAssignees();
+        for (Employee employee : employees) {
+            if (!isOwner(employer, employee)) {
+                throw new Exception("This employer cannot give a task to that employee");
+            }
+        }
         return service.createTask(task);
     }
 
     @PreAuthorize("this.isAssignee(principal.username, #id)")
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/tasks/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public TaskDTO update(@PathVariable Long id, @RequestBody Task task) throws Exception {
         return service.logWork(id, task);
     }
 
-    public boolean isOwner(String username, Long id) {
-        Employer employer = employerService.getByUsername(username);
-        Employee employee = employeeService.getById(id);
+    public boolean isOwner(Employer employer, Employee employee) {
         if ((employer.getEmployees().contains(employee))) {
             return true;
         }

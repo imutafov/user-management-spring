@@ -5,6 +5,7 @@
  */
 package com.example.task;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,10 @@ public class TaskService {
 
     public Task getById(Long id) {
         return repo.findOne(id);
+    }
+
+    public List<TaskDTO> getByEmployeeId(Long id) {
+        return TaskMapper.mapEntitiesIntoDTOs(repo.findByAssigneesId(id));
     }
 
     public TaskDTO logWork(Long id, Task task) throws Exception {

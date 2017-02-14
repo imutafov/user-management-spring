@@ -7,7 +7,6 @@ package com.example.employer;
 
 import com.example.employee.Employee;
 import com.example.user.User;
-import com.example.task.Task;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -18,7 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Getter;
@@ -44,13 +42,5 @@ public class Employer implements Serializable {
 
     @OneToMany(mappedBy = "employer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Employee> employees;
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "EMPLOYER_WORKLOGS", joinColumns = {
-        @JoinColumn(name = "EMPLOYER_ID")},
-            inverseJoinColumns = {
-                @JoinColumn(name = "WORKLOG_ID")}
-    )
-    private List<Task> worklog;
 
 }
