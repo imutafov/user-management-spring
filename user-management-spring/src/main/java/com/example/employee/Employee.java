@@ -72,6 +72,7 @@ public class Employee implements Serializable {
         @JoinColumn(name = "EMPLOYEE_ID")},
             inverseJoinColumns = {
                 @JoinColumn(name = "TASK_ID")})
+    @JsonIgnore
     private List<Task> tasks;
 
     public Employer getEmployer() {

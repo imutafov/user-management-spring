@@ -5,6 +5,7 @@
  */
 package com.example.employee;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,10 @@ public class EmployeeService {
 
     public Employee getById(Long id) {
         return repo.findOne(id);
+    }
+
+    public List<Employee> getAllEmployees() {
+        return repo.findAll();
     }
 
     public Employee getByUsername(String username) {
