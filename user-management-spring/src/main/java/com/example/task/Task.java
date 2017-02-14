@@ -7,6 +7,7 @@ package com.example.task;
 
 import com.example.employee.Employee;
 import com.example.employer.Employer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -41,6 +42,7 @@ public class Task implements Serializable {
             inverseJoinColumns = {
                 @JoinColumn(name = "EMPLOYEE_ID")}
     )
+    @JsonIgnore
     private List<Employee> assignees;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
