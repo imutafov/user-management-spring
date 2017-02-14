@@ -12,6 +12,7 @@ import com.example.employer.EmployerService;
 import com.example.user.User;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,17 +47,24 @@ public class TaskController {
         List<Employee> employees = task.getAssignees();
         for (Employee employee : employees) {
             if (!isOwner(employer, employee)) {
-                throw new Exception("This employer cannot give a task to that employee");
+                throw new Exception("This employer cannot give a task to employee No: " + employee.getEmployeeNumber());
             }
         }
         return service.createTask(task);
     }
 
     @PreAuthorize("this.isAssignee(principal.username, #id)")
-    @RequestMapping(value = "/tasks/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/tasks/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public TaskDTO update(@PathVariable Long id, @RequestBody String body, @AuthenticationPrincipal User user) throws Exception {
+    public TaskDTO addUpdate(@PathVariable Long id, @RequestBody String body, @AuthenticationPrincipal User user) throws Exception {
         return service.logWork(id, body, user);
+    }
+
+    @RequestMapping(value = "/tasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<TaskUpdaterDTO> getTasks(Pageable pageRequest, @AuthenticationPrincipal User user) {
+        Employer employer = employerService.getByUsername(user.getUsername());
+        List<Employee> employees = employer.getEmployees();
+        return service.getEmployeesTasks(employees, pageRequest).getContent();
     }
 
     public boolean isOwner(Employer employer, Employee employee) {

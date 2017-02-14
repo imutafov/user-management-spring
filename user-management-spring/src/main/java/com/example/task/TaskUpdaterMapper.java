@@ -15,25 +15,24 @@ import org.springframework.data.domain.Pageable;
  *
  * @author msol-pc
  */
-public class TaskMapper {
+public class TaskUpdaterMapper {
 
-    public static List<TaskDTO> mapEntitiesIntoDTOs(List<Task> tasks) {
+    public static List<TaskUpdaterDTO> mapEntitiesIntoDTOs(List<Task> tasks) {
         return tasks.stream()
-                .map(TaskMapper::mapEntityIntoDTO)
+                .map(TaskUpdaterMapper::mapEntityIntoDTO)
                 .collect(Collectors.toList());
     }
 
-    public static TaskDTO mapEntityIntoDTO(Task task) {
+    public static TaskUpdaterDTO mapEntityIntoDTO(Task task) {
 
-        TaskDTO dto = new TaskDTO();
+        TaskUpdaterDTO dto = new TaskUpdaterDTO();
         dto.setTitle(task.getTitle());
-        dto.setUpdates(task.getUpdates());
-        dto.setCreated(task.getCreated());
+        dto.setLastUpdated(task.getLastUpdated());
         return dto;
     }
 
-    public static Page<TaskDTO> mapEntityPageIntoDTOPage(Pageable page, Page<Task> source) {
-        List<TaskDTO> dtos = mapEntitiesIntoDTOs(source.getContent());
+    public static Page<TaskUpdaterDTO> mapEntityPageIntoDTOPage(Pageable page, Page<Task> source) {
+        List<TaskUpdaterDTO> dtos = mapEntitiesIntoDTOs(source.getContent());
         return new PageImpl<>(dtos, page, source.getTotalElements());
     }
 

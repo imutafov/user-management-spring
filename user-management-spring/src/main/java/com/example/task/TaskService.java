@@ -5,6 +5,7 @@
  */
 package com.example.task;
 
+import com.example.employee.Employee;
 import com.example.user.User;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,16 @@ public class TaskService {
 
     public Task getById(Long id) {
         return repo.findOne(id);
+    }
+
+    public Page<TaskUpdaterDTO> getAllTasks(Pageable pageRequest) {
+        Page<Task> tasks = repo.findAll(pageRequest);
+        return TaskUpdaterMapper.mapEntityPageIntoDTOPage(pageRequest, tasks);
+    }
+
+    public Page<TaskUpdaterDTO> getEmployeesTasks(List<Employee> employees, Pageable pageRequest) {
+        Page<Task> tasks = repo.findByAssigneesIn(employees, pageRequest);
+        return TaskUpdaterMapper.mapEntityPageIntoDTOPage(pageRequest, tasks);
     }
 
     public Page<TaskDTO> getByEmployeeId(Long id, Pageable pageRequest) {
