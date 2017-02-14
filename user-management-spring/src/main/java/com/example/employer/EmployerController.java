@@ -7,14 +7,14 @@ package com.example.employer;
 
 import com.example.employee.Employee;
 import com.example.employee.EmployeeService;
+import com.example.user.User;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,17 +57,15 @@ public class EmployerController {
 
     @RequestMapping(value = "/employers/employeecount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public Integer getEmployeeCount() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Employer empl = service.getByUsername(auth.getName());
+    public Integer getEmployeeCount(@AuthenticationPrincipal User user) {
+        Employer empl = service.getByUsername(user.getUsername());
         return empl.getEmployees().size();
     }
 
     @RequestMapping(value = "/employers/employees", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public List<Employee> getOwnEmployees(Pageable pageRequest) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Employer empl = service.getByUsername(auth.getName());
+    public List<Employee> getOwnEmployees(Pageable pageRequest, @AuthenticationPrincipal User user) {
+        Employer empl = service.getByUsername(user.getUsername());
         return employeeService.getEmployeesByEmployer(empl.getUser().getUsername(), pageRequest).getContent();
     }
 

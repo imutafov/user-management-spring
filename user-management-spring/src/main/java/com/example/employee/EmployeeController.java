@@ -9,14 +9,14 @@ import com.example.employer.Employer;
 import com.example.employer.EmployerService;
 import com.example.task.TaskDTO;
 import com.example.task.TaskService;
+import com.example.user.User;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,10 +36,9 @@ public class EmployeeController {
 
     @Autowired
     private EmployerService employerService;
-  
+
     @Autowired
     private TaskService taskService;
-
 
     @RequestMapping(value = "/employees", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
@@ -62,25 +61,21 @@ public class EmployeeController {
 
     @RequestMapping(value = "/employees/self", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public EmployeeDTO currentEmployee() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        EmployeeDTO empl = service.getEmployeeDTOByUserName(auth.getName());
-        return empl;
+    public EmployeeDTO currentEmployee(@AuthenticationPrincipal User user) {
+        return service.getEmployeeDTOByUserName(user.getUsername());
     }
 
     @RequestMapping(value = "/employees/tasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public List<TaskDTO> getTasks(Pageable pageRequest) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Employee empl = service.getEmployeeByUserName(auth.getName());
+    public List<TaskDTO> getTasks(Pageable pageRequest, @AuthenticationPrincipal User user) {
+        Employee empl = service.getEmployeeByUserName(user.getUsername());
         return taskService.getByEmployeeId(empl.getId(), pageRequest).getContent();
     }
 
     @RequestMapping(value = "/employees", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public EmployeeDTO update(@RequestBody EmployeeDTO empl) throws Exception {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return service.update(auth.getName(), empl);
+    public EmployeeDTO update(@RequestBody EmployeeDTO empl, @AuthenticationPrincipal User user) throws Exception {
+        return service.update(user.getUsername(), empl);
     }
 
     public boolean isOwner(String username, Long id) {
