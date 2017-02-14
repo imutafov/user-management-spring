@@ -46,7 +46,6 @@ public class UserController {
     public ResponseEntity create(@RequestBody User user) throws UnsupportedEncodingException {
 
         String token = userTokenUtil.generateToken(user);
-        System.out.println(user.getFirstName());
         service.save(user, token);
 
         if (!userTokenUtil.validateToken(token, user)) {
@@ -123,7 +122,6 @@ public class UserController {
     @RequestMapping(value = "users/authorization/{token}/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserDTO enableUser(@PathVariable String token) {
         String username = userTokenUtil.getUsernameFromToken(token);
-        System.out.println("USERNAME FROM TOKEN " + username);
         User user = (User) userDetailsService.loadUserByUsername(username);
         if (user != null) {
             user.setEnabled(true);

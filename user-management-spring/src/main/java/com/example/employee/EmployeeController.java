@@ -7,6 +7,8 @@ package com.example.employee;
 
 import com.example.employer.Employer;
 import com.example.employer.EmployerService;
+import com.example.task.TaskDTO;
+import com.example.task.TaskService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +36,10 @@ public class EmployeeController {
 
     @Autowired
     private EmployerService employerService;
+  
+    @Autowired
+    private TaskService taskService;
+
 
     @RequestMapping(value = "/employees", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
@@ -58,8 +64,16 @@ public class EmployeeController {
     @ResponseStatus(value = HttpStatus.OK)
     public EmployeeDTO currentEmployee() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        EmployeeDTO empl = service.getEmployeeByUserName(auth.getName());
+        EmployeeDTO empl = service.getEmployeeDTOByUserName(auth.getName());
         return empl;
+    }
+
+    @RequestMapping(value = "/employees/tasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<TaskDTO> getTasks(Pageable pageRequest) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee empl = service.getEmployeeByUserName(auth.getName());
+        return taskService.getByEmployeeId(empl.getId(), pageRequest).getContent();
     }
 
     @RequestMapping(value = "/employees", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
