@@ -31,12 +31,6 @@ public class TaskMapper {
         return dto;
     }
 
-//    public static TaskDTO mapUpdates(Task task) {
-//        TaskDTO dto = new TaskDTO();
-//        dto.setTitle(task.getTitle());
-//        List<Update> updates = task.getUpdates();
-//
-//    }
     public static Page<TaskDTO> mapEntityPageIntoDTOPage(Pageable page, Page<Task> source) {
         List<TaskDTO> dtos = mapEntitiesIntoDTOs(source.getContent());
         return new PageImpl<>(dtos, page, source.getTotalElements());
