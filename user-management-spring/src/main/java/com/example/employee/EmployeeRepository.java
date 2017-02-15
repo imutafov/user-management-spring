@@ -20,4 +20,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     public Page<Employee> findByEmployerUserUserName(String employerName, Pageable pageRequest);
 
     public Employee findByUserUserName(String userName);
+
+    public Employee findByTasksUpdatesUpdaterId(Long id);
 }

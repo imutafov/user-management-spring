@@ -7,8 +7,10 @@ package com.example.employee;
 
 import com.example.employer.Employer;
 import com.example.task.Task;
+import com.example.task.Update;
 import com.example.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -24,6 +26,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Data;
 
@@ -72,8 +75,11 @@ public class Employee implements Serializable {
         @JoinColumn(name = "EMPLOYEE_ID")},
             inverseJoinColumns = {
                 @JoinColumn(name = "TASK_ID")})
-    @JsonIgnore
+    @JsonManagedReference
     private List<Task> tasks;
+
+    @OneToMany(mappedBy = "updater", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Update> updates;
 
     public Employer getEmployer() {
         return employer;

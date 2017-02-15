@@ -64,9 +64,9 @@ public class EmployeeService {
         return EmployeeMapper.mapEntityIntoDTO(empl);
     }
 
-    public Employee getEmployeeByUserName(String userName) {
-        Employee empl = repo.findByUserUserName(userName);
-        return empl;
+    public List<EmployeeTaskDTO> getAllTasked() {
+        List<Employee> employees = repo.findAll();
+        return EmployeeTaskMapper.mapEntitiesIntoDTOs(employees);
     }
 
     public EmployeeDTO update(String userName, EmployeeDTO employee) throws Exception {

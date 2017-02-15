@@ -5,8 +5,7 @@
  */
 package com.example.task;
 
-import java.util.Date;
-import java.util.List;
+import com.example.employee.Employee;
 import lombok.Data;
 
 /**
@@ -14,10 +13,9 @@ import lombok.Data;
  * @author msol-pc
  */
 @Data
-public class TaskDTO {
+public class TaskUpdaterDTO {
 
     private String title;
-    private Date created;
-    private List<Update> updates;
+    private Employee lastUpdated;
 
 }

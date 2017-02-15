@@ -5,15 +5,20 @@
  */
 package com.example.task;
 
-import com.example.user.User;
+import com.example.employee.Employee;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -35,11 +40,23 @@ public class Update {
     @Temporal(TemporalType.TIMESTAMP)
     private Date timeUpdated;
 
-    @OneToOne
-    @JoinColumn(name = "USER_ID")
-    private User updater;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "UPDATE_UPDATER", joinColumns = {
+        @JoinColumn(name = "UPDATER_ID")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "UPDATE_ID")})
+    @JsonIgnore
+    private Employee updater;
 
     private String body;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "TASK_UPDATE", joinColumns = {
+        @JoinColumn(name = "TASK_ID")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "UPDATE_ID")})
+    @JsonBackReference
+    private Task task;
 
     @PrePersist
     void setDates() {

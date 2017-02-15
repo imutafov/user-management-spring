@@ -5,7 +5,7 @@
  */
 package com.example.task;
 
-import com.example.user.User;
+import com.example.employee.Employee;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,22 +26,30 @@ public class TaskService {
         return repo.findOne(id);
     }
 
+    public Page<TaskUpdaterDTO> getAllTasks(Pageable pageRequest) {
+        Page<Task> tasks = repo.findAll(pageRequest);
+        return TaskUpdaterMapper.mapEntityPageIntoDTOPage(pageRequest, tasks);
+    }
+
+    public Page<TaskUpdaterDTO> getEmployeesTasks(List<Employee> employees, Pageable pageRequest) {
+        Page<Task> tasks = repo.findByAssigneesIn(employees, pageRequest);
+        return TaskUpdaterMapper.mapEntityPageIntoDTOPage(pageRequest, tasks);
+    }
+
     public Page<TaskDTO> getByEmployeeId(Long id, Pageable pageRequest) {
         Page<Task> tasks = repo.findByAssigneesId(id, pageRequest);
         return TaskMapper.mapEntityPageIntoDTOPage(pageRequest, tasks);
     }
 
-    public TaskDTO logWork(Long id, String body, User user) throws Exception {
+    public TaskDTO logWork(Long id, Update update, Employee employee) throws Exception {
         Task dbTask = repo.findOne(id);
         if (dbTask == null) {
             throw new Exception("Task not found");
         }
-        Update update = new Update();
-        update.setBody(body);
-        update.setUpdater(user);
-        List<Update> updates = dbTask.getUpdates();
-        updates.add(update);
-        dbTask.setLastUpdated(user);
+        update.setUpdater(employee);
+        update.setTask(dbTask);
+        dbTask.getUpdates().add(update);
+        dbTask.setLastUpdated(employee);
         return TaskMapper.mapEntityIntoDTO(repo.save(dbTask));
     }
 }
