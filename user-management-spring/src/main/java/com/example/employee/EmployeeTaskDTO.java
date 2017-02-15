@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.task;
+package com.example.employee;
 
-import com.example.employee.Employee;
+import com.example.task.Update;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -13,9 +14,8 @@ import lombok.Data;
  * @author msol-pc
  */
 @Data
-public class TaskUpdaterDTO {
+public class EmployeeTaskDTO {
 
-    private String title;
-    private Employee lastUpdated;
-
+    private String firstName;
+    private List<Update> updates;
 }

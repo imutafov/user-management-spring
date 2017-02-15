@@ -7,8 +7,9 @@ package com.example.task;
 
 import com.example.employee.Employee;
 import com.example.employer.Employer;
-import com.example.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -42,6 +43,7 @@ public class Task implements Serializable {
     private String title;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Update> updates;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -49,7 +51,8 @@ public class Task implements Serializable {
 
     @OneToOne
     @JoinColumn(name = "USER_ID")
-    private User lastUpdated;
+    @JsonBackReference
+    private Employee lastUpdated;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "EMPLOYEE_TASKS", joinColumns = {

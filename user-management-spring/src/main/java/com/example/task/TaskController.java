@@ -56,8 +56,9 @@ public class TaskController {
     @PreAuthorize("this.isAssignee(principal.username, #id)")
     @RequestMapping(value = "/tasks/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public TaskDTO addUpdate(@PathVariable Long id, @RequestBody String body, @AuthenticationPrincipal User user) throws Exception {
-        return service.logWork(id, body, user);
+    public TaskDTO addUpdate(@PathVariable Long id, @RequestBody Update update, @AuthenticationPrincipal User user) throws Exception {
+        Employee employee = employeeService.getByUsername(user.getUsername());
+        return service.logWork(id, update, employee);
     }
 
     @RequestMapping(value = "/tasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

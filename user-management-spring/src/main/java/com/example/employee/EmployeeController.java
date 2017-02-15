@@ -68,7 +68,7 @@ public class EmployeeController {
     @RequestMapping(value = "/employees/tasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public List<TaskDTO> getTasks(Pageable pageRequest, @AuthenticationPrincipal User user) {
-        Employee empl = service.getEmployeeByUserName(user.getUsername());
+        Employee empl = service.getByUsername(user.getUsername());
         return taskService.getByEmployeeId(empl.getId(), pageRequest).getContent();
     }
 
@@ -76,6 +76,11 @@ public class EmployeeController {
     @ResponseStatus(value = HttpStatus.OK)
     public EmployeeDTO update(@RequestBody EmployeeDTO empl, @AuthenticationPrincipal User user) throws Exception {
         return service.update(user.getUsername(), empl);
+    }
+
+    @RequestMapping(value = "/employees/tasked", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<EmployeeTaskDTO> getTaskedEmployees() {
+        return service.getAllTasked();
     }
 
     public boolean isOwner(String username, Long id) {
