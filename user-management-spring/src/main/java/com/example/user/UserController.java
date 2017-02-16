@@ -1,11 +1,14 @@
 package com.example.user;
 
+import com.example.configuration.BatchConfiguration;
 import com.example.exceptions.UserNotFoundException;
 import com.example.security.UserAuthenticationResponse;
 import com.example.security.UserTokenUtil;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -27,6 +30,12 @@ public class UserController {
 
     @Autowired
     private UserService service;
+
+    @Autowired
+    private JobLauncher jobLauncher;
+
+    @Autowired
+    private BatchConfiguration batch;
 
     @Autowired
     private UserTokenUtil userTokenUtil;
@@ -128,5 +137,10 @@ public class UserController {
         }
         UserDTO dto = UserMapper.mapEntityIntoDTO(user);
         return dto;
+    }
+
+    @RequestMapping(value = "transfer", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public void transfer() throws Exception {
+        jobLauncher.run(batch.importUserJob(), new JobParameters());
     }
 }
