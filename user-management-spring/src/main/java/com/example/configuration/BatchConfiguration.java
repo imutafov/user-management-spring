@@ -45,7 +45,7 @@ public class BatchConfiguration {
 
         return new FlatFileItemReaderBuilder<User>()
                 .name("file-reader")
-                .resource(new FileSystemResource("C:/test.csv"))
+                .resource(new FileSystemResource("../resources/test.csv"))
                 .targetType(User.class)
                 .delimited().delimiter(",").names(new String[]{"firstName", "username", "password"})
                 .build();
