@@ -77,8 +77,24 @@ public class EmployeeService {
     }
 
     public EmployeeDTO getEmployeeDTOByUserName(String userName) {
+        User user = userRepo.findByUserName(userName);
         Employee empl = repo.findByUserUserName(userName);
-        return EmployeeMapper.mapEntityIntoDTO(empl);
+
+        // null fields for embeded data
+        if (empl.getDob() == null) {
+            empl.setDob(user.getBirthDate());
+        }
+        if (empl.getFirstName() == null) {
+            empl.setFirstName(user.getFirstName());
+        }
+        if (empl.getLastName() == null) {
+            empl.setLastName(user.getLastName());
+        }
+        if (empl.getPhoneNumber() == null) {
+            empl.setPhoneNumber(user.getPhoneNumber());
+        }
+
+        return EmployeeMapper.mapEntityIntoDTO(repo.save(empl));
     }
 
     public List<EmployeeTaskDTO> getAllTasked() {
