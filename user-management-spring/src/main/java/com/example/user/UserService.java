@@ -15,7 +15,13 @@ public class UserService {
     @Autowired
     private RoleRepository roleRepo;
 
-    public User save(User user) {
+    public User saveUser(User user) {
+        user.setRole(roleRepo.findByName("USER"));
+        return repo.save(user);
+    }
+
+    public User saveAdmin(User user) {
+        user.setRole(roleRepo.findByName("ADMIN"));
         return repo.save(user);
     }
 

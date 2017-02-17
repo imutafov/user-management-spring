@@ -15,7 +15,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
@@ -51,10 +50,7 @@ public class User implements Serializable, UserDetails {
     private boolean enabled;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "USER_ROLE", joinColumns = {
-        @JoinColumn(name = "USER_ID")},
-            inverseJoinColumns = {
-                @JoinColumn(name = "ROLE_ID")})
+    @JoinColumn(name = "ROLE_ID")
     private Role role;
 
     @Override
