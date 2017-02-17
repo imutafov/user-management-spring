@@ -58,9 +58,8 @@ public class Employee implements Serializable {
     private BigDecimal bonus;
     private BigDecimal commission;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "USER_ID")
-    @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

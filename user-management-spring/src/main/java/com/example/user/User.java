@@ -56,6 +56,7 @@ public class User implements Serializable, UserDetails {
     private Role role;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Employee employee;
 
     @Override
