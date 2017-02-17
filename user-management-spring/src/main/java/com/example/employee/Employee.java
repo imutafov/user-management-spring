@@ -58,7 +58,7 @@ public class Employee implements Serializable {
     private BigDecimal bonus;
     private BigDecimal commission;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "USER_ID")
     private User user;
 
@@ -70,7 +70,7 @@ public class Employee implements Serializable {
     @JsonIgnore
     private Employer employer;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "EMPLOYEE_TASKS", joinColumns = {
         @JoinColumn(name = "EMPLOYEE_ID")},
             inverseJoinColumns = {

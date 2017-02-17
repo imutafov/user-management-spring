@@ -42,7 +42,7 @@ public class UserService {
     }
 
     public User remove(Long id) throws Exception {
-        User user = repo.findOne(id);
+        User user = repo.findByUserId(id); // for some reason findOne doesn't work (user == null)
         if (user == null) {
             throw new Exception("User not found");
         }
@@ -51,7 +51,7 @@ public class UserService {
     }
 
     public User update(Long id, User user) throws Exception {
-        User dbUser = repo.findOne(id);
+        User dbUser = repo.findByUserId(id);
         if (user == null) {
             throw new Exception("User not found");
         }

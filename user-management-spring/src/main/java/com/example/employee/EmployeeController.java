@@ -40,10 +40,10 @@ public class EmployeeController {
     @Autowired
     private TaskService taskService;
 
-    @RequestMapping(value = "/employees", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/employees/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public Employee save(@RequestBody Employee empl) {
-        return service.save(empl);
+    public Employee save(@RequestBody Employee empl, @PathVariable Long id) {
+        return service.save(empl, id);
     }
 
     @RequestMapping(value = "/employees", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
